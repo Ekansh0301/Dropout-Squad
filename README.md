@@ -133,12 +133,6 @@ Dropout-Squad/
 - **Training**: PyTorch, Transformers, TRL, PEFT
 - **Optimization**: 4-bit quantization, LoRA adapters, mixed precision
 
-## Hardware Requirements
-
-- **Minimum**: 4x GTX 1080 Ti (11GB VRAM each)
-- **Memory**: 32GB+ system RAM
-- **Storage**: 20GB+ for models and data
-- **Training Time**: ~3 days for complete pipeline
 
 ## Getting Started
 
