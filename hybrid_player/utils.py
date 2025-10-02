@@ -1,3 +1,7 @@
+"""
+Utility functions for hybrid player data processing.
+File I/O, data loading, and basic operations.
+"""
 import os
 import json
 import pickle
@@ -10,11 +14,11 @@ logger = logging.getLogger(__name__)
 
 
 def ensure_dir(path: str) -> None:
-    """Ensure directory exists"""
+    """Create directory if it doesn't exist."""
     os.makedirs(path, exist_ok=True)
 
 def load_json_files(directory: str) -> List[Dict]:
-    """Load all JSON files from a directory"""
+    """Load all JSON files from a directory."""
     data = []
     if not os.path.exists(directory):
         logger.warning(f"Directory not found: {directory}")
@@ -32,13 +36,13 @@ def load_json_files(directory: str) -> List[Dict]:
     return data
 
 def save_pickle(obj: Any, filepath: str) -> None:
-    """Save object as pickle"""
+    """Save object as pickle file."""
     ensure_dir(os.path.dirname(filepath))
     with open(filepath, 'wb') as f:
         pickle.dump(obj, f)
 
 def load_pickle(filepath: str) -> Any:
-    """Load object from pickle"""
+    """Load object from pickle file."""
     if not os.path.exists(filepath):
         raise FileNotFoundError(f"Pickle file not found: {filepath}")
     

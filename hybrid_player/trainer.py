@@ -1,3 +1,7 @@
+"""
+Training utilities for hybrid player model components.
+Includes dataset classes and training methods for language model and intent classifier.
+"""
 import torch
 from torch.utils.data import Dataset, DataLoader
 from transformers import (
@@ -13,6 +17,8 @@ from .data_loader import HybridPlayerDataProcessor
 logger = logging.getLogger(__name__)
 
 class PlayerTextDataset(Dataset):
+    """Dataset for training player language model on player utterances."""
+    
     def __init__(self, texts, tokenizer, max_length=128):
         self.texts = texts
         self.tokenizer = tokenizer
@@ -37,6 +43,8 @@ class PlayerTextDataset(Dataset):
         }
 
 class IntentDataset(Dataset):
+    """Dataset for training intent classifier with labeled player actions."""
+    
     def __init__(self, texts, labels, tokenizer, max_length=128):
         self.texts = texts
         self.labels = labels

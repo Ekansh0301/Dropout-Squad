@@ -1,0 +1,24 @@
+# Comprehensive Model Evaluation Configuration
+
+# Model paths for evaluation
+model_paths:
+  baseline_model_path: "models/sft_baseline_interim" # SFT baseline
+  narrative_critic_path: "critic/models/narrative_critic"
+  causal_critic_model_name: "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli"
+
+# Evaluation dataset
+data_path: "data/splits/test"
+
+# Evaluation parameters
+evaluation_settings:
+  num_samples: 100 # Test samples to evaluate
+  output_dir: "evaluation_results"
+  seed: 42
+
+# Text generation settings
+generation_settings:
+  max_new_tokens: 150
+  do_sample: true
+  temperature: 0.7
+  top_p: 0.95
+  top_k: 50

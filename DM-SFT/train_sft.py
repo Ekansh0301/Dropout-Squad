@@ -1,13 +1,12 @@
 """
-DM-SFT Training Script - Optimized for 3-day interim submission
-Trains Llama-2-7B with QLoRA on 4x GTX 1080 Ti
+DM-SFT Training Script for Llama-2-7B with QLoRA optimization.
+Trains Director LLM baseline on D&D dialogue data.
 
-OPTIMIZATIONS APPLIED:
-1. 10% data subset (26K instead of 263K examples)
-2. 1 epoch instead of 3
-3. Shorter sequences (256 tokens instead of 512)
-4. Smaller LoRA rank if needed
-5. Less frequent evaluation/checkpointing
+Optimizations for 3-day development cycle:
+- 10% data subset for faster training
+- Single epoch training
+- 256 token sequences
+- Efficient LoRA configuration
 
 Expected training time: 2-3 hours on 4x GTX 1080 Ti
 """
@@ -35,7 +34,7 @@ from peft import (
     prepare_model_for_kbit_training
 )
 
-# Optional but recommended
+# Optional W&B integration for experiment tracking
 try:
     import wandb
     WANDB_AVAILABLE = True
@@ -44,14 +43,14 @@ except ImportError:
     print("⚠️  W&B not installed. Install with: pip install wandb")
 
 def load_config(config_path="sft_config_fast.yaml"):
-    """Load training configuration from YAML file"""
+    """Load training configuration from YAML file."""
     print(f"\nLoading config from: {config_path}")
     with open(config_path, 'r') as f:
         config = yaml.safe_load(f)
     return config
 
 def print_config_summary(config):
-    """Print key configuration details"""
+    """Display key training configuration parameters."""
     print("\n" + "="*70)
     print("CONFIGURATION SUMMARY")
     print("="*70)
@@ -67,7 +66,7 @@ def print_config_summary(config):
     print("="*70)
 
 def check_gpu_availability():
-    """Check and display GPU information"""
+    """Verify GPU availability and display hardware information."""
     print("\n" + "="*70)
     print("GPU INFORMATION")
     print("="*70)
@@ -92,7 +91,7 @@ def check_gpu_availability():
     return gpu_count
 
 def setup_wandb(config):
-    """Initialize Weights & Biases tracking"""
+    """Initialize Weights & Biases experiment tracking."""
     if not WANDB_AVAILABLE:
         print("\n⚠️  Skipping W&B (not installed)")
         return False
@@ -119,7 +118,7 @@ def setup_wandb(config):
     return False
 
 def load_model_and_tokenizer(config):
-    """Load model with 4-bit quantization and tokenizer"""
+    """Load Llama model with 4-bit quantization and tokenizer."""
     print("\n" + "="*70)
     print("LOADING MODEL & TOKENIZER")
     print("="*70)
@@ -128,7 +127,7 @@ def load_model_and_tokenizer(config):
     print(f"\nModel: {model_name}")
     print("Quantization: 4-bit NF4")
     
-    # Configure 4-bit quantization
+    # Configure 4-bit quantization for memory efficiency
     bnb_config = BitsAndBytesConfig(
         load_in_4bit=config['model']['load_in_4bit'],
         bnb_4bit_quant_type=config['model']['bnb_4bit_quant_type'],
@@ -136,10 +135,10 @@ def load_model_and_tokenizer(config):
         bnb_4bit_use_double_quant=config['model']['bnb_4bit_use_double_quant'],
     )
     
-    # Device map for multi-GPU compatibility
+    # Device mapping for multi-GPU setup
     device_map = {"": int(os.environ.get("LOCAL_RANK", 0))}
     
-    # Load model
+    # Load base model with quantization
     print("\nLoading base model...")
     model = AutoModelForCausalLM.from_pretrained(
         model_name,
@@ -149,7 +148,7 @@ def load_model_and_tokenizer(config):
         torch_dtype=torch.float16,
     )
     
-    # Load tokenizer
+    # Load tokenizer with appropriate settings
     print("Loading tokenizer...")
     tokenizer = AutoTokenizer.from_pretrained(
         model_name,
@@ -157,7 +156,7 @@ def load_model_and_tokenizer(config):
         padding_side="right"
     )
     
-    # Set pad token
+    # Configure padding token
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
         tokenizer.pad_token_id = tokenizer.eos_token_id
@@ -165,7 +164,7 @@ def load_model_and_tokenizer(config):
     if hasattr(model.config, 'pad_token_id') and model.config.pad_token_id is None:
         model.config.pad_token_id = tokenizer.pad_token_id
     
-    # Prepare model for k-bit training
+    # Prepare model for quantized training
     model = prepare_model_for_kbit_training(model)
     
     print("✓ Model and tokenizer loaded successfully")
@@ -176,7 +175,7 @@ def load_model_and_tokenizer(config):
     return model, tokenizer
 
 def setup_lora(model, config):
-    """Configure and apply LoRA to the model"""
+    """Configure and apply LoRA adapters for parameter-efficient training."""
     print("\n" + "="*70)
     print("CONFIGURING LORA")
     print("="*70)
@@ -196,10 +195,10 @@ def setup_lora(model, config):
     print(f"  Dropout: {lora_config.lora_dropout}")
     print(f"  Target modules: {lora_config.target_modules}")
     
-    # Apply LoRA
+    # Apply LoRA to model
     model = get_peft_model(model, lora_config)
     
-    # Calculate trainable parameters
+    # Display parameter efficiency statistics
     trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
     total_params = sum(p.numel() for p in model.parameters())
     trainable_pct = 100 * trainable_params / total_params
@@ -213,14 +212,14 @@ def setup_lora(model, config):
     return model
 
 def load_and_prepare_datasets(config, tokenizer):
-    """Load datasets with optional subsampling and tokenization - WITH PROGRESS BARS"""
+    """Load, subsample, and tokenize datasets with progress tracking."""
     print("\n" + "="*70)
     print("LOADING & PREPARING DATASETS")
     print("="*70)
     
     from tqdm import tqdm
     
-    # Load datasets
+    # Load datasets from disk
     print(f"\nLoading from disk:")
     print(f"  Train: {config['data']['train_path']}")
     print(f"  Val: {config['data']['val_path']}")
@@ -232,12 +231,12 @@ def load_and_prepare_datasets(config, tokenizer):
     print(f"  Train: {len(train_dataset):,} examples")
     print(f"  Val: {len(eval_dataset):,} examples")
     
-    # Check if datasets have the required 'text' column
+    # Validate dataset format
     print(f"\nDataset columns: {train_dataset.column_names}")
     if 'text' not in train_dataset.column_names:
         raise ValueError(f"Dataset must have 'text' column. Found: {train_dataset.column_names}")
     
-    # OPTIMIZATION: Subsample for faster training
+    # Subsample for faster training iteration
     if 'max_train_samples' in config['data']:
         print(f"\n⚡ OPTIMIZATION: Using subset for interim submission")
         requested_samples = config['data']['max_train_samples']
@@ -257,12 +256,12 @@ def load_and_prepare_datasets(config, tokenizer):
         )
         print(f"  ✓ Val subset: {len(eval_dataset):,} examples")
     
-    # Show sample before tokenization
+    # Display sample data before processing
     print(f"\nSample training example (before tokenization):")
     print(f"  Length: {len(train_dataset[0]['text'])} characters")
     print(f"  Preview: {train_dataset[0]['text'][:150]}...")
     
-    # Tokenization function
+    # Tokenization function for language modeling
     def tokenize_function(examples):
         outputs = tokenizer(
             examples['text'],
@@ -274,17 +273,17 @@ def load_and_prepare_datasets(config, tokenizer):
         outputs["labels"] = outputs["input_ids"].copy()
         return outputs
     
-    # Tokenize datasets WITH PROGRESS BAR
+    # Apply tokenization with parallel processing
     print(f"\nTokenizing datasets (max length: {config['data']['max_seq_length']} tokens)...")
     
     print("\n[1/2] Tokenizing training set...")
     train_dataset = train_dataset.map(
         tokenize_function,
         batched=True,
-        batch_size=1000,  # Process in batches for efficiency
+        batch_size=1000,
         remove_columns=train_dataset.column_names,
         desc="Tokenizing train",
-        num_proc=4,  # Parallel processing
+        num_proc=4,
         load_from_cache_file=True
     )
     print(f"  ✓ Training set tokenized: {len(train_dataset):,} examples")
@@ -301,14 +300,14 @@ def load_and_prepare_datasets(config, tokenizer):
     )
     print(f"  ✓ Validation set tokenized: {len(eval_dataset):,} examples")
     
-    # Verify tokenization
+    # Verify tokenization results
     print(f"\nTokenization verification:")
     sample_tokens = train_dataset[0]['input_ids']
     print(f"  Sample length: {len(sample_tokens)} tokens")
     print(f"  Sample tokens (first 10): {sample_tokens[:10]}")
     print(f"  Decoded sample: {tokenizer.decode(sample_tokens[:50])}...")
     
-    # Calculate statistics
+    # Calculate token statistics
     print(f"\nDataset statistics:")
     token_lengths = [len(example['input_ids']) for example in train_dataset.select(range(min(1000, len(train_dataset))))]
     avg_length = sum(token_lengths) / len(token_lengths)
@@ -321,7 +320,7 @@ def load_and_prepare_datasets(config, tokenizer):
     return train_dataset, eval_dataset
 
 def calculate_training_time(train_dataset, config, gpu_count):
-    """Estimate training time"""
+    """Estimate total training time based on dataset size and hardware."""
     num_examples = len(train_dataset)
     epochs = config['training']['num_train_epochs']
     batch_size = config['training']['per_device_train_batch_size']
@@ -331,7 +330,7 @@ def calculate_training_time(train_dataset, config, gpu_count):
     steps_per_epoch = num_examples // effective_batch
     total_steps = steps_per_epoch * epochs
     
-    # Rough estimate: ~1.5 seconds per step on 4x 1080 Ti with this config
+    # Estimated processing time per step on 4x GTX 1080 Ti
     seconds_per_step = 1.5
     total_seconds = total_steps * seconds_per_step
     hours = total_seconds / 3600
@@ -343,7 +342,7 @@ def calculate_training_time(train_dataset, config, gpu_count):
     }
 
 def train_model(model, tokenizer, train_dataset, eval_dataset, config):
-    """Configure and run training"""
+    """Configure training parameters and execute model training."""
     print("\n" + "="*70)
     print("TRAINING CONFIGURATION")
     print("="*70)
@@ -358,17 +357,17 @@ def train_model(model, tokenizer, train_dataset, eval_dataset, config):
     print(f"  Estimated time: {training_info['estimated_hours']:.1f} hours")
     print(f"  Effective batch size: {config['training']['per_device_train_batch_size'] * config['training']['gradient_accumulation_steps'] * gpu_count}")
     
-    # Create output directory
+    # Prepare output directory
     output_dir = Path(config['training']['output_dir'])
     output_dir.mkdir(parents=True, exist_ok=True)
     
-    # Save config for reproducibility
+    # Save configuration for reproducibility
     config_save_path = output_dir / "training_config.yaml"
     with open(config_save_path, 'w') as f:
         yaml.dump(config, f)
     print(f"\n✓ Config saved to: {config_save_path}")
     
-    # Training arguments
+    # Configure training arguments
     training_args = TrainingArguments(
         output_dir=str(output_dir),
         num_train_epochs=config['training']['num_train_epochs'],
@@ -403,7 +402,7 @@ def train_model(model, tokenizer, train_dataset, eval_dataset, config):
         remove_unused_columns=False,
     )
     
-    # Data collator
+    # Set up data collator for language modeling
     data_collator = DataCollatorForLanguageModeling(
         tokenizer=tokenizer,
         mlm=False,
@@ -418,7 +417,7 @@ def train_model(model, tokenizer, train_dataset, eval_dataset, config):
         data_collator=data_collator,
     )
     
-    # Start training
+    # Begin training process
     print("\n" + "="*70)
     print("🚀 STARTING TRAINING")
     print("="*70)
@@ -429,10 +428,10 @@ def train_model(model, tokenizer, train_dataset, eval_dataset, config):
     print("  - Run 'nvidia-smi' in another terminal to monitor GPU")
     print("\n" + "="*70 + "\n")
     
-    # Train
+    # Execute training
     train_result = trainer.train()
     
-    # Training complete
+    # Training completion summary
     print("\n" + "="*70)
     print("✓ TRAINING COMPLETE")
     print("="*70)
@@ -440,7 +439,7 @@ def train_model(model, tokenizer, train_dataset, eval_dataset, config):
     print(f"Total training time: {train_result.metrics['train_runtime'] / 3600:.2f} hours")
     print(f"Final loss: {train_result.metrics['train_loss']:.4f}")
     
-    # Save final model
+    # Save trained model and tokenizer
     print("\nSaving final model...")
     trainer.save_model()
     tokenizer.save_pretrained(config['training']['output_dir'])
@@ -451,7 +450,7 @@ def train_model(model, tokenizer, train_dataset, eval_dataset, config):
         json.dump(train_result.metrics, f, indent=2)
     print(f"✓ Metrics saved to: {metrics_path}")
     
-    # Run final evaluation
+    # Perform final evaluation
     print("\nRunning final evaluation...")
     eval_results = trainer.evaluate()
     
@@ -459,7 +458,7 @@ def train_model(model, tokenizer, train_dataset, eval_dataset, config):
     print(f"  Eval loss: {eval_results['eval_loss']:.4f}")
     print(f"  Perplexity: {torch.exp(torch.tensor(eval_results['eval_loss'])):.2f}")
     
-    # Save eval metrics
+    # Save evaluation metrics
     eval_metrics_path = output_dir / "eval_metrics.json"
     with open(eval_metrics_path, 'w') as f:
         json.dump(eval_results, f, indent=2)
@@ -469,7 +468,7 @@ def train_model(model, tokenizer, train_dataset, eval_dataset, config):
     return trainer, train_result, eval_results
 
 def print_next_steps():
-    """Print what to do after training completes"""
+    """Display post-training workflow instructions."""
     print("\n" + "="*70)
     print("NEXT STEPS")
     print("="*70)
@@ -484,9 +483,10 @@ def print_next_steps():
     print("\n" + "="*70)
 
 def main():
+    """Execute complete training pipeline."""
     import os
     os.environ["CUDA_VISIBLE_DEVICES"] = "0,1,2,3"
-    """Main training pipeline"""
+    
     print("\n" + "="*70)
     print("DM-SFT TRAINING - INTERIM SUBMISSION MODE")
     print("="*70)
@@ -502,11 +502,11 @@ def main():
     print("  - Would require ~10-12 hours on 4x GTX 1080 Ti")
     print("="*70)
     
-    # Load configuration
+    # Load and validate configuration
     config = load_config()
     print_config_summary(config)
     
-    # Check GPUs
+    # Verify hardware requirements
     gpu_count = check_gpu_availability()
     if gpu_count != 4:
         print(f"\n⚠️  WARNING: Expected 4 GPUs, found {gpu_count}")
@@ -515,28 +515,28 @@ def main():
             print("Exiting.")
             return
     
-    # Set random seed for reproducibility
+    # Set reproducible random seed
     set_seed(config['seed'])
     print(f"\n✓ Random seed set to: {config['seed']}")
     
-    # Setup W&B
+    # Initialize experiment tracking
     setup_wandb(config)
     
-    # Load model and tokenizer
+    # Load model with quantization and tokenizer
     model, tokenizer = load_model_and_tokenizer(config)
     
-    # Apply LoRA
+    # Apply LoRA for efficient training
     model = setup_lora(model, config)
     
-    # Load and prepare datasets
+    # Prepare training and validation datasets
     train_dataset, eval_dataset = load_and_prepare_datasets(config, tokenizer)
     
-    # Train
+    # Execute training process
     trainer, train_result, eval_results = train_model(
         model, tokenizer, train_dataset, eval_dataset, config
     )
     
-    # Done
+    # Display completion summary
     print_next_steps()
     print("\n✓ Training pipeline complete!")
     print("="*70 + "\n")

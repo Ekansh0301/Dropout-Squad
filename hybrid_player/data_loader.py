@@ -1,3 +1,7 @@
+"""
+Data loading utilities for hybrid player training.
+Extracts player utterances from CRD3 and LIGHT datasets.
+"""
 import os
 import json
 import pickle
@@ -11,23 +15,23 @@ import logging
 logger = logging.getLogger(__name__)
 
 class CRD3DataLoader:
+    """Loads player utterances from Critical Role Dungeons & Dragons 3 dataset."""
+    
     def __init__(self, config: DataConfig):
         self.config = config
         self.dm_names = [name.upper() for name in config.dm_names]
     
     def is_player_turn(self, names: List[str]) -> bool:
-        """Check if turn is from a player (not DM)"""
+        """Check if turn is from a player (not DM)."""
         if not names:
             return False
-        # If any name is a DM name, it's not a player turn
         return not any(name.upper() in self.dm_names for name in names)
     
     def extract_player_utterances(self) -> List[str]:
-        """Extract all player utterances from CRD3 dataset by reading actual files"""
+        """Extract all player utterances from CRD3 dataset."""
         all_utterances = []
         
         for chunk_size in self.config.crd3_chunk_sizes:
-            # Use the actual directory name from config
             chunk_dir = os.path.join(
                 self.config.crd3_base_path, 
                 self.config.crd3_aligned_data_dir,
@@ -51,7 +55,6 @@ class CRD3DataLoader:
                     for turn in turns:
                         if self.is_player_turn(turn.get("NAMES", [])):
                             utterances = turn.get("UTTERANCES", [])
-                            # Combine multi-part utterances
                             full_utterance = " ".join(utterances).strip()
                             if full_utterance:
                                 all_utterances.append(full_utterance)
@@ -60,14 +63,16 @@ class CRD3DataLoader:
         return all_utterances
 
 class LIGHTDataLoader:
+    """Loads player utterances from LIGHT dialogue dataset."""
+    
     def __init__(self, config: DataConfig):
         self.config = config
     
     def extract_player_utterances(self) -> List[str]:
-        """Extract player utterances from LIGHT dataset"""
+        """Extract player utterances from LIGHT dataset."""
         all_utterances = []
         
-        # Load from main LIGHT data file
+        # Load main LIGHT data file
         light_data_path = os.path.join(self.config.light_base_path, "light_data.pkl")
         if os.path.exists(light_data_path):
             try:
@@ -77,7 +82,7 @@ class LIGHTDataLoader:
             except Exception as e:
                 logger.error(f"Error loading LIGHT data from {light_data_path}: {e}")
         
-        # Load from unseen data file
+        # Load unseen data file
         light_unseen_path = os.path.join(self.config.light_base_path, "light_unseen_data.pkl")
         if os.path.exists(light_unseen_path):
             try:
@@ -93,7 +98,7 @@ class LIGHTDataLoader:
         return all_utterances
     
     def _extract_from_light_list(self, light_data: List) -> List[str]:
-        """Extract from LIGHT list structure - the actual format"""
+        """Extract utterances from LIGHT list structure."""
         utterances = []
         if not isinstance(light_data, list):
             return utterances

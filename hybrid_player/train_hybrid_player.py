@@ -1,4 +1,8 @@
 
+"""
+Main training script for hybrid player model.
+Trains both language model and intent classifier components.
+"""
 import os
 import sys
 import logging
@@ -15,6 +19,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 def validate_data_paths(config):
+    """Validate that required data paths exist."""
     issues = []
     
     # Check CRD3 paths
@@ -22,7 +27,7 @@ def validate_data_paths(config):
     if not os.path.exists(crd3_path):
         issues.append(f"CRD3 path not found: {crd3_path}")
     else:
-        # Check for aligned_data subdirectory
+        # Check aligned_data subdirectory
         aligned_path = os.path.join(crd3_path, "aligned_data")
         if not os.path.exists(aligned_path):
             issues.append(f"CRD3 aligned_data not found: {aligned_path}")

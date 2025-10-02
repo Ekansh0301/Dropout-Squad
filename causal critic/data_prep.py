@@ -1,6 +1,6 @@
 """
-Prepare causal consistency training data from CRD3
-Extract player action → DM response pairs
+Data preparation for causal consistency training.
+Extracts player action → DM response pairs from CRD3 dataset.
 """
 import json
 import random
@@ -9,7 +9,7 @@ from datasets import Dataset, load_from_disk
 from tqdm import tqdm
 
 def extract_causal_pairs_from_crd3(crd3_dir="data/crd3"):
-    """Extract player action → DM response pairs from CRD3"""
+    """Extract sequential player-DM interaction pairs from CRD3 dataset."""
     print("\n" + "="*60)
     print("EXTRACTING CAUSAL PAIRS FROM CRD3")
     print("="*60)
@@ -28,7 +28,7 @@ def extract_causal_pairs_from_crd3(crd3_dir="data/crd3"):
                 for chunk in data:
                     turns = chunk.get('TURNS', [])
                     
-                    # Look for Player → DM sequences
+                    # Extract Player → DM sequences
                     for i in range(len(turns) - 1):
                         curr_turn = turns[i]
                         next_turn = turns[i + 1]
@@ -42,11 +42,11 @@ def extract_causal_pairs_from_crd3(crd3_dir="data/crd3"):
                         if len(curr_text) < 20 or len(next_text) < 20:
                             continue
                         
-                        # Check if Player → DM sequence
+                        # Identify DM (Matthew/Matt) vs Player speakers
                         curr_is_dm = any(n.upper() in ['MATT', 'MATTHEW'] for n in curr_names)
                         next_is_dm = any(n.upper() in ['MATT', 'MATTHEW'] for n in next_names)
                         
-                        # Player action → DM response
+                        # Collect Player action → DM response pairs
                         if not curr_is_dm and next_is_dm:
                             positive_pairs.append({
                                 'premise': curr_text[:512],
@@ -62,7 +62,7 @@ def extract_causal_pairs_from_crd3(crd3_dir="data/crd3"):
     return positive_pairs
 
 def create_negative_pairs(positive_pairs, n_negatives=None):
-    """Create negative examples by mismatching contexts and responses"""
+    """Generate negative examples by mismatching contexts with unrelated responses."""
     if n_negatives is None:
         n_negatives = len(positive_pairs)
     
@@ -72,16 +72,16 @@ def create_negative_pairs(positive_pairs, n_negatives=None):
     random.seed(42)
     
     for i in range(min(n_negatives, len(positive_pairs))):
-        # Take premise from one pair, hypothesis from random other pair
+        # Mismatch premise from one pair with hypothesis from another
         pair_i = positive_pairs[i]
         pair_j = positive_pairs[random.randint(0, len(positive_pairs) - 1)]
         
-        # Ensure they're actually different
+        # Ensure different pairs for meaningful negatives
         if pair_i != pair_j:
             negative_pairs.append({
                 'premise': pair_i['premise'],
-                'hypothesis': pair_j['hypothesis'],  # Mismatched
-                'label': 0,  # Contradiction/Not entailment
+                'hypothesis': pair_j['hypothesis'],  # Mismatched response
+                'label': 0,  # Contradiction
                 'label_float': 0.0
             })
     
@@ -89,17 +89,18 @@ def create_negative_pairs(positive_pairs, n_negatives=None):
     return negative_pairs
 
 def prepare_causal_training_data():
+    """Create complete training dataset with positive and negative examples."""
     print("\n" + "="*60)
     print("PREPARING CAUSAL CRITIC TRAINING DATA")
     print("="*60)
     
-    # Extract positive pairs
+    # Extract positive examples from CRD3
     positive_pairs = extract_causal_pairs_from_crd3()
     
-    # Create negative pairs
+    # Generate negative examples
     negative_pairs = create_negative_pairs(positive_pairs)
     
-    # Combine
+    # Combine and shuffle dataset
     all_pairs = positive_pairs + negative_pairs
     random.seed(42)
     random.shuffle(all_pairs)
@@ -111,7 +112,7 @@ def prepare_causal_training_data():
     print(f"  Positive (causal): {len(positive_pairs):,}")
     print(f"  Negative (non-causal): {len(negative_pairs):,}")
     
-    # Split
+    # Create train/validation split
     split_idx = int(len(all_pairs) * 0.9)
     train_data = all_pairs[:split_idx]
     val_data = all_pairs[split_idx:]
@@ -120,7 +121,7 @@ def prepare_causal_training_data():
     print(f"  Train: {len(train_data):,}")
     print(f"  Val: {len(val_data):,}")
     
-    # Save
+    # Save processed datasets
     output_dir = Path("data/causal_critic_training")
     output_dir.mkdir(parents=True, exist_ok=True)
     

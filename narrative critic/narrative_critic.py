@@ -1,7 +1,6 @@
 """
-Train Narrative Critic - COMPLETE VERSION
-Logs all metrics, saves checkpoints, generates training plots
-Multi-GPU optimized, full instrumentation for report
+Narrative critic training with comprehensive metrics and multi-GPU optimization.
+Trains DeBERTa model for narrative quality assessment with detailed instrumentation.
 """
 import torch
 import yaml
@@ -22,16 +21,16 @@ from transformers import (
 from datasets import load_from_disk
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 
-# Custom callback to log detailed metrics
+# Custom training callback for detailed metrics logging
 class DetailedLoggingCallback(TrainerCallback):
-    """Custom callback to save detailed training history"""
+    """Callback to capture and save comprehensive training history."""
     
     def __init__(self, output_dir):
         self.output_dir = Path(output_dir)
         self.training_history = []
     
     def on_log(self, args, state, control, logs=None, **kwargs):
-        """Save each log entry"""
+        """Record each training log entry with step and epoch information."""
         if logs:
             log_entry = {
                 'step': state.global_step,
@@ -41,30 +40,30 @@ class DetailedLoggingCallback(TrainerCallback):
             self.training_history.append(log_entry)
     
     def on_train_end(self, args, state, control, **kwargs):
-        """Save complete history at end"""
+        """Save complete training history to disk."""
         history_file = self.output_dir / "training_history.json"
         with open(history_file, 'w') as f:
             json.dump(self.training_history, f, indent=2)
         print(f"\n✓ Training history saved: {history_file}")
 
 def compute_metrics(eval_pred):
-    """Comprehensive evaluation metrics"""
+    """Calculate comprehensive evaluation metrics for narrative quality."""
     predictions, labels = eval_pred
     predictions = predictions.squeeze()
     
-    # Apply sigmoid for 0-1 scores
+    # Apply sigmoid activation for 0-1 probability scores
     predictions_sigmoid = 1 / (1 + np.exp(-predictions))
     
-    # Calculate metrics
+    # Regression metrics
     mse = mean_squared_error(labels, predictions_sigmoid)
     mae = mean_absolute_error(labels, predictions_sigmoid)
     rmse = np.sqrt(mse)
     r2 = r2_score(labels, predictions_sigmoid)
     
-    # Correlation
+    # Correlation analysis
     correlation = np.corrcoef(labels, predictions_sigmoid)[0, 1]
     
-    # Accuracy-like metric (within 0.2 threshold)
+    # Classification-style accuracy (within tolerance)
     within_threshold = np.mean(np.abs(predictions_sigmoid - labels) < 0.2)
     
     return {
@@ -77,11 +76,13 @@ def compute_metrics(eval_pred):
     }
 
 def load_config(config_path="critic_config_fast.yaml"):
+    """Load training configuration from YAML file."""
     print(f"\nLoading config: {config_path}")
     with open(config_path, 'r') as f:
         return yaml.safe_load(f)
 
 def main():
+    """Execute complete narrative critic training pipeline."""
     print("\n" + "="*70)
     print("NARRATIVE CRITIC TRAINING - FULL INSTRUMENTATION")
     print("="*70)
@@ -93,27 +94,27 @@ def main():
     print("\nExpected time: 1-1.5 hours")
     print("="*70)
     
-    # Load config
+    # Load configuration and set reproducible seed
     config = load_config()
     set_seed(config['seed'])
     
-    # Check GPUs
+    # Display GPU information
     gpu_count = torch.cuda.device_count()
     print(f"\n✓ GPUs detected: {gpu_count}")
     for i in range(gpu_count):
         print(f"  GPU {i}: {torch.cuda.get_device_properties(i).name}")
     
-    # Create output dir
+    # Setup output directory
     output_dir = Path(config['training']['output_dir'])
     output_dir.mkdir(parents=True, exist_ok=True)
     
-    # Save config
+    # Save configuration for reproducibility
     config_save = output_dir / "critic_config.yaml"
     with open(config_save, 'w') as f:
         yaml.dump(config, f)
     print(f"\n✓ Config saved: {config_save}")
     
-    # Load model
+    # Load pre-trained model and tokenizer
     print("\n" + "="*70)
     print("[1/4] LOADING MODEL")
     print("="*70)
@@ -130,7 +131,7 @@ def main():
     print(f"\n✓ Model: {config['model']['name']}")
     print(f"  Parameters: {total_params:,}")
     
-    # Load datasets
+    # Load training and validation datasets
     print("\n" + "="*70)
     print("[2/4] LOADING DATA")
     print("="*70)
@@ -142,22 +143,22 @@ def main():
     train_dataset = load_from_disk(config['data']['train_path'])
     eval_dataset = load_from_disk(config['data']['val_path'])
     
-    
     print(f"\n✓ Loaded:")
     print(f"  Train: {len(train_dataset):,} examples")
     print(f"  Val: {len(eval_dataset):,} examples")
     
-    # Show sample
+    # Display sample data
     print(f"\nSample example:")
     print(f"  Text: {train_dataset[0]['text'][:100]}...")
     print(f"  Label: {train_dataset[0]['label_float']}")
     
-    # Tokenize
+    # Tokenize datasets
     print("\n" + "="*70)
     print("[3/4] TOKENIZING")
     print("="*70)
     
     def tokenize_function(examples):
+        """Tokenize text examples with truncation and padding."""
         return tokenizer(
             examples['text'],
             truncation=True,
@@ -190,7 +191,7 @@ def main():
     
     print("\n✓ Tokenization complete")
     
-    # Training
+    # Configure and execute training
     print("\n" + "="*70)
     print("[4/4] TRAINING")
     print("="*70)

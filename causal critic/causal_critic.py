@@ -1,21 +1,20 @@
 """
-Causal Responsiveness Critic
-Uses zero-shot NLI to measure logical consistency
-No training required - uses pre-trained model
+Causal Responsiveness Critic for evaluating DM response consistency.
+Uses pre-trained NLI model to score causal relationships between context and response.
 """
 import torch
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 import numpy as np
 from tqdm import tqdm
-from pathlib import Path  # Add this at the top of the file
+from pathlib import Path
 import json
 
 
 
 class CausalCritic:
     """
-    Measures if DM response causally follows from player action
-    Uses NLI entailment probability as proxy for causal consistency
+    Evaluates causal consistency between player actions and DM responses.
+    Uses NLI entailment probability to measure logical coherence.
     """
     
     def __init__(self, model_name="MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli"):
@@ -28,7 +27,7 @@ class CausalCritic:
         
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         
-        # Load pre-trained NLI model
+        # Load pre-trained NLI model for zero-shot inference
         print("\nLoading model...")
         self.model = AutoModelForSequenceClassification.from_pretrained(
             model_name,
@@ -40,22 +39,21 @@ class CausalCritic:
         
         print("✓ Causal Critic ready (zero-shot)")
         
-        # NLI label mapping (model specific)
-        # Typically: 0=contradiction, 1=neutral, 2=entailment
+        # NLI label mapping: 0=contradiction, 1=neutral, 2=entailment
         self.entailment_label = 2
     
     def score(self, premise, hypothesis):
         """
-        Score causal consistency between context and response
+        Evaluate causal consistency between context and response.
         
         Args:
-            premise: Player action/context (what happened before)
-            hypothesis: DM response (what should logically follow)
+            premise: Player action/context
+            hypothesis: DM response
         
         Returns:
-            float: Entailment probability (0-1), higher = more causally consistent
+            float: Entailment probability (0-1), higher indicates better consistency
         """
-        # Format for NLI
+        # Format inputs for NLI model
         inputs = self.tokenizer(
             premise,
             hypothesis,
@@ -68,14 +66,14 @@ class CausalCritic:
             outputs = self.model(**inputs)
             logits = outputs.logits
             
-            # Get probability of entailment class
+            # Extract entailment probability
             probs = torch.softmax(logits, dim=-1)
             entailment_prob = probs[0, self.entailment_label].item()
         
         return entailment_prob
     
     def score_batch(self, premise_hypothesis_pairs):
-        """Score multiple pairs efficiently"""
+        """Efficiently score multiple premise-hypothesis pairs."""
         scores = []
         
         for premise, hypothesis in tqdm(premise_hypothesis_pairs, desc="Causal scoring"):
@@ -85,7 +83,7 @@ class CausalCritic:
         return scores
     
     def test_critic(self):
-        """Test the critic with examples"""
+        """Test critic functionality with sample D&D scenarios."""
         print("\n" + "="*60)
         print("TESTING CAUSAL CRITIC")
         print("="*60)
@@ -134,7 +132,7 @@ class CausalCritic:
         print("="*60)
 
 def save_critic_wrapper():
-    """Save a simple wrapper config for later use"""
+    """Save critic configuration metadata for deployment."""
     config = {
         'model_name': "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli",
         'task': 'causal_consistency',
@@ -154,13 +152,9 @@ def save_critic_wrapper():
     print(f"\n✓ Causal Critic config saved to: {output_dir}")
 
 if __name__ == "__main__":
-    # Initialize critic
+    # Initialize and test critic
     critic = CausalCritic()
-    
-    # Test it
     critic.test_critic()
-    
-    # Save config
     save_critic_wrapper()
     
     print("\n✓ Causal Critic ready for evaluation")

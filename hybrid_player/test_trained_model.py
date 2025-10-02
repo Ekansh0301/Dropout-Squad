@@ -1,13 +1,17 @@
-# test_trained_models.py
+"""
+Test script for trained hybrid player models.
+Quick functionality test for language model and intent classifier.
+"""
 import os
 import sys
 from transformers import AutoModelForCausalLM, AutoTokenizer, AutoModelForSequenceClassification
 import torch
 
 def load_and_test_models():
-    print(" Loading and Testing Trained Models\n")
+    """Load and test trained models with sample inputs."""
+    print("Loading and Testing Trained Models\n")
     
-    # 1. Test Language Model
+    # Test language model
     print("1. Testing Language Model...")
     lm_path = "models/language_model/final"
     
@@ -15,7 +19,7 @@ def load_and_test_models():
         try:
             lm_tokenizer = AutoTokenizer.from_pretrained(lm_path)
             lm_model = AutoModelForCausalLM.from_pretrained(lm_path)
-            print(" Language model loaded successfully!")
+            print("Language model loaded successfully!")
             
             # Test generation
             test_prompts = [
@@ -27,7 +31,7 @@ def load_and_test_models():
             for prompt in test_prompts:
                 inputs = lm_tokenizer.encode(prompt, return_tensors="pt")
                 outputs = lm_model.generate(
-                    inputs, 
+                    inputs,
                     max_length=20, 
                     num_return_sequences=1,
                     pad_token_id=lm_tokenizer.eos_token_id

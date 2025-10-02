@@ -1,4 +1,7 @@
-# evaluate_trained_models_fixed.py
+"""
+Evaluation script for trained hybrid player models.
+Tests both language model and intent classifier on holdout data.
+"""
 import os
 import pandas as pd
 import torch
@@ -7,12 +10,13 @@ from sklearn.metrics import classification_report, accuracy_score
 import numpy as np
 
 def evaluate_trained_models():
-    print(" Evaluating Trained Models on Test Data\n")
+    """Evaluate trained models on test data."""
+    print("Evaluating Trained Models on Test Data\n")
     
-    # Load test data - fixed path
+    # Load test data
     test_data_path = "../data/processed/hybrid_player_data.csv"
     if not os.path.exists(test_data_path):
-        print(f" Test data not found at: {test_data_path}")
+        print(f"Test data not found at: {test_data_path}")
         print("Looking for alternative paths...")
         
         # Try different possible locations
@@ -25,7 +29,7 @@ def evaluate_trained_models():
         for path in possible_paths:
             if os.path.exists(path):
                 test_data_path = path
-                print(f" Found data at: {path}")
+                print(f"Found data at: {path}")
                 break
         else:
             print(" Could not find test data!")

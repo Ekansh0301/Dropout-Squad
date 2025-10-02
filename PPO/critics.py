@@ -1,19 +1,12 @@
 """
-critics.py - The Reward Engine for the MCRL Pipeline
+Unified reward engine for Multi-Critic Reinforcement Learning pipeline.
+Provides efficient, batched interfaces for trained critic models during PPO training.
 
-This module loads the final, trained critic models and provides a simple,
-unified interface for the PPO trainer to get reward signals.
-
-Key Design Principles:
-- Encapsulation: Each critic is a self-contained class, managing its own
-  model, tokenizer, and device.
-- Efficiency: Models are loaded once, set to evaluation mode (.eval()), and
-  all reward calculations are done within a torch.no_grad() block to
-  maximize performance.
-- Batching: All methods are designed to work on batches (lists of strings)
-  for efficient processing during the PPO loop.
-- Clear Reward Logic: The reward extraction method is tailored to how each
-  critic was trained (Regression for Narrative, Classification for Causal).
+Design principles:
+- Encapsulation: Self-contained critic classes with internal model management
+- Efficiency: Models loaded once, evaluation mode, no_grad contexts
+- Batching: All methods handle lists of strings for efficient processing
+- Clear reward logic: Tailored extraction for each critic's training approach
 """
 import torch
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
@@ -21,17 +14,16 @@ from typing import List
 
 class NarrativeCritic:
     """
-    Loads the trained Narrative Critic and provides a reward method.
-    This critic was trained as a REGRESSION model to predict a continuous
-    quality score. The reward is the sigmoid of the model's single logit output.
+    Trained narrative quality critic providing continuous reward scores.
+    Uses regression model to predict quality scores with sigmoid activation.
     """
     def __init__(self, model_path: str, device: torch.device):
         """
-        Initializes the Narrative Critic.
+        Initialize narrative critic with trained model.
 
         Args:
-            model_path (str): Path to the trained model directory.
-            device (torch.device): The device to run the model on (e.g., 'cuda:0').
+            model_path: Path to trained model directory
+            device: Torch device for model inference
         """
         self.device = device
         print(f"Loading Narrative Critic from: {model_path}")
@@ -41,15 +33,15 @@ class NarrativeCritic:
 
     def get_reward(self, texts: List[str]) -> torch.Tensor:
         """
-        Calculates the narrative quality score for a batch of texts.
+        Calculate narrative quality scores for batch of texts.
 
         Args:
-            texts (List[str]): A list of generated DM responses.
+            texts: List of generated DM responses
 
         Returns:
-            torch.Tensor: A 1D tensor of reward scores (0.0 to 1.0), one for each text.
+            Tensor of reward scores (0.0 to 1.0) for each text
         """
-        # Move to device and tokenize with padding and truncation
+        # Tokenize with padding and truncation for batch processing
         inputs = self.tokenizer(
             texts, 
             return_tensors="pt", 
@@ -58,30 +50,27 @@ class NarrativeCritic:
             max_length=self.tokenizer.model_max_length
         ).to(self.device)
         
-        # Perform inference without calculating gradients for efficiency
+        # Efficient inference without gradient calculation
         with torch.no_grad():
             logits = self.model(**inputs).logits
         
-        # The model outputs a single logit. Apply sigmoid to scale it to a 0-1 reward.
-        # .squeeze(-1) changes the shape from [batch_size, 1] to [batch_size]
+        # Apply sigmoid to convert logits to 0-1 reward scores
         scores = torch.sigmoid(logits).squeeze(-1)
         
         return scores
 
 class CausalCritic:
     """
-    Loads the trained Causal Critic and provides a reward method.
-    This critic was trained as a CLASSIFICATION model to predict the NLI
-    relationship (contradiction, neutral, entailment). The reward is the
-    softmax probability of the "entailment" class.
+    Trained causal consistency critic using NLI classification.
+    Evaluates logical consistency between player actions and DM responses.
     """
     def __init__(self, model_path: str, device: torch.device):
         """
-        Initializes the Causal Critic.
+        Initialize causal critic with trained NLI model.
 
         Args:
-            model_path (str): Path to the trained model directory.
-            device (torch.device): The device to run the model on (e.g., 'cuda:0').
+            model_path: Path to trained model directory
+            device: Torch device for model inference
         """
         self.device = device
         print(f"Loading Causal Critic from: {model_path}")
@@ -91,30 +80,30 @@ class CausalCritic:
 
     def get_reward(self, premises: List[str], hypotheses: List[str]) -> torch.Tensor:
         """
-        Calculates the causal consistency score for premise-hypothesis pairs.
+        Calculate causal consistency scores for premise-hypothesis pairs.
 
         Args:
-            premises (List[str]): A list of player prompts.
-            hypotheses (List[str]): A list of the DM's responses.
+            premises: List of player prompts/actions
+            hypotheses: List of corresponding DM responses
 
         Returns:
-            torch.Tensor: A 1D tensor of reward scores (0.0 to 1.0), one for each pair.
+            Tensor of entailment probabilities as reward scores (0.0 to 1.0)
         """
-        # Tokenize the pairs
+        # Tokenize premise-hypothesis pairs for NLI classification
         inputs = self.tokenizer(
             premises, 
             hypotheses, 
             return_tensors="pt", 
             truncation=True, 
             padding=True,
-            max_length=256 # As defined in your training script
+            max_length=256
         ).to(self.device)
         
-        # Perform inference without calculating gradients
+        # Efficient inference without gradient calculation
         with torch.no_grad():
             logits = self.model(**inputs).logits
         
-        # The model outputs 3 logits. Apply softmax to get probabilities.
+        # Apply softmax and extract entailment probabilities
         probs = torch.softmax(logits, dim=-1)
         
         # The reward is the probability of the "entailment" class.
