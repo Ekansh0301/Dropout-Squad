@@ -28,6 +28,29 @@ The Director LLM system consists of several interconnected components:
 - **Comprehensive Evaluation**: Statistical analysis and domain-specific metrics
 - **Research-Grade Implementation**: Reproducible experiments with detailed configuration
 
+### Dynamic Reward Weighting System
+
+The core innovation of the Director LLM is intent-aware reward weighting:
+
+**Player Intent Classification**:
+- **EXPLORE**: Investigation, movement, environmental interaction
+- **ACTION**: Combat, physical actions, skill usage
+- **DIALOGUE**: Conversation, social interaction, roleplay
+
+**Adaptive Reward Weights**:
+```python
+intent_weights = {
+    "EXPLORE": {"narrative": 0.8, "causal": 0.2},  # Prioritize world-building
+    "ACTION": {"narrative": 0.3, "causal": 0.7},   # Focus on logical consequences  
+    "DIALOGUE": {"narrative": 0.6, "causal": 0.4}  # Balance storytelling and logic
+}
+```
+
+**Benefits**:
+- Context-appropriate response optimization
+- Reduces reward signal conflicts between critics
+- Enables domain-specific behavior adaptation
+
 ## Technical Stack
 
 - **Base Language Model**: Llama-2-7B (via microsoft/phi-2) with QLoRA adapters
@@ -107,15 +130,23 @@ Dropout-Squad/
 
 ### hybrid_player
 
-**Purpose**: Simulates realistic player behavior for RL training
+**Purpose**: Simulates realistic player behavior for RL training using dual-component architecture
 
 - `__init__.py`: Module exports and initialization
 - `config.py`: Configuration classes for data and model settings
 - `models.py`: Player language model and intent classifier implementations
-- `data_loader.py`: Data loading from CRD3 and LIGHT datasets
+- `data_loader.py`: Data loading from CRD3 and LIGHT datasets with intent labeling
 - `trainer.py`: Training utilities for both components
 - `utils.py`: File I/O and data processing utilities
 - `train_hybrid_player.py`: Main training script for hybrid player system
+- `test_trained_model.py`: Quick testing and validation of trained models
+- `evaluate_trained_models.py`: Comprehensive model evaluation with metrics
+
+**Key Features**:
+- **Dual Architecture**: DistilGPT-2 for utterance generation + DistilBERT for intent classification
+- **Intent Categories**: EXPLORE, ACTION, DIALOGUE with automatic keyword-based labeling
+- **Data Integration**: Combines CRD3 and LIGHT datasets for comprehensive training
+- **PPO Integration**: Provides intent-classified prompts for dynamic reward weighting
 
 ### Evaluation
 
@@ -136,6 +167,10 @@ Dropout-Squad/
 ## Datasets
 
 The project utilizes multiple datasets for comprehensive training:
+
+### Dataset Download
+
+🔗 **[Dataset](https://1drv.ms/f/c/bdcf3b74ef9b6129/Ep8Im9Kl-SNOspd2NAYqJ4MBzBsoeKe3uRlr6IhZiDkyGg?e=hrZgDd)**
 
 ### Primary Datasets
 - **CRD3**: Critical Role D&D transcripts (~200 episodes, 2 campaigns)

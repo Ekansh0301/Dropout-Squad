@@ -1,9 +1,13 @@
 # Dropout Squad - Project Data Documentation
 
-
 ## Overview
 
 The Dropout Squad project utilizes multiple datasets for training different components of the multi-critic reinforcement learning system. Each dataset serves specific purposes in the training pipeline, from supervised fine-tuning to critic training and player simulation.
+
+## Dataset Download
+
+🔗 **[Dataset](https://1drv.ms/f/c/bdcf3b74ef9b6129/Ep8Im9Kl-SNOspd2NAYqJ4MBzBsoeKe3uRlr6IhZiDkyGg?e=hrZgDd)**
+
 
 ## Required Datasets
 
@@ -198,7 +202,6 @@ label_candidates:option1|option2|option3
 - Consistent evaluation across experiments
 - Reproducible results
 
-
 ## Data Usage by Module
 
 ### DM-SFT Module
@@ -325,6 +328,5 @@ label_candidates:option1|option2|option3
 3. **Updates**: Check for dataset updates and version compatibility
 4. **Preprocessing**: Some modules may require additional preprocessing steps
 5. **Memory**: Large datasets may require memory-efficient loading strategies
-
 
 ---

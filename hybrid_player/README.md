@@ -88,6 +88,8 @@ Configuration classes for data processing, model setup, and training parameters.
 - LIGHT dataset integration settings
 - DM name identification for speaker classification
 - Data filtering and quality control parameters
+- Data split ratios (train/val/test) configuration
+- DM name variations for filtering out narrator turns
 
 **`ModelConfig`**
 
@@ -95,8 +97,19 @@ Configuration classes for data processing, model setup, and training parameters.
 - Intent classifier setup (DistilBERT)
 - Training hyperparameters and optimization settings
 - Model architecture and output specifications
+- Hyperparameters for both language model and intent classifier training
 
 **`HybridPlayerConfig`**
+
+- Combined configuration orchestrating both components
+- Training pipeline settings and integration parameters
+- Output paths and model saving configurations
+- Main configuration container for the entire system
+
+**Key Functions:**
+
+- `get_base_dir()`: Automatic path resolution for project structure
+- `__post_init__()`: Configuration validation and setup
 
 - Combined configuration orchestrating both components
 - Training pipeline settings and integration parameters
@@ -151,7 +164,7 @@ DIALOGUE: "I ask the NPC about the quest"  # Conversation and roleplay
 
 #### `data_loader.py`
 
-Data loading utilities for training both model components.
+Data loading utilities for training both model components with comprehensive processing pipeline.
 
 **Main Classes:**
 
@@ -159,29 +172,42 @@ Data loading utilities for training both model components.
 
 - Extracts player utterances from Critical Role D&D dataset
 - Identifies player vs. DM speakers using name recognition
-- Filters and processes dialogue for training data
+- Filters out DM/narrator turns using configurable DM names
 - Handles multi-file dataset processing with progress tracking
+- Processes chunked dialogue structure from JSON files
 
 **`LIGHTDataLoader`**
 
 - Loads player dialogue from LIGHT fantasy conversation dataset
 - Processes structured dialogue data for training
-- Handles both main and unseen data splits
+- Handles both seen and unseen data splits
+- Extracts player speech, actions, and emotes
 - Removes duplicates and ensures data quality
+
+**`IntentLabeler`**
+
+- Automatically labels utterances with intents using keyword matching
+- Three intent categories: EXPLORE, ACTION, DIALOGUE
+- Uses configurable keyword sets for each intent type
+- Fallback to DIALOGUE when no keywords match
+- Supports manual annotation validation
 
 **`HybridPlayerDataProcessor`**
 
 - Unified data processing orchestrator
 - Combines CRD3 and LIGHT datasets for comprehensive training
-- Implements data splitting and validation
+- Implements data splitting and validation with stratification
 - Creates intent-labeled training data for classifier
+- Handles train/val/test splitting with proper balance
+- Saves processed data to CSV format
 
 **Key Functions:**
 
-- `extract_player_utterances()`: Extracts all player dialogue
-- `create_intent_labels()`: Generates intent annotations
-- `prepare_training_data()`: Creates final training datasets
-- `validate_data_quality()`: Ensures data meets quality standards
+- `extract_player_utterances()`: Extracts all player dialogue from datasets
+- `create_intent_labels()`: Generates intent annotations using keyword matching
+- `prepare_training_data()`: Creates final training datasets with proper formatting
+- `validate_data_quality()`: Ensures data meets quality standards and completeness
+- `combine_datasets()`: Merges multiple data sources with deduplication
 
 #### `trainer.py`
 
@@ -243,6 +269,37 @@ Main training script orchestrating the complete hybrid player training pipeline.
 - `train_intent_classifier()`: Manages intent classification training
 - `integrate_models()`: Combines components into hybrid system
 
+**Additional Features:**
+
+- Comprehensive error handling and logging
+- Environment setup and dependency validation
+- Progress tracking throughout the training pipeline
+
+#### `test_trained_model.py`
+
+Quick testing script for immediate validation of trained models.
+
+**Testing Features:**
+
+- **Model Loading**: Loads saved models from disk for testing
+- **Language Model Testing**: Tests generation on sample prompts with various contexts
+- **Intent Classification Testing**: Validates classifier on sample utterances
+- **Performance Feedback**: Provides immediate feedback on model performance
+- **Quick Validation**: Rapid testing without full evaluation pipeline
+
+#### `evaluate_trained_models.py`
+
+Comprehensive evaluation script for detailed model performance analysis.
+
+**Evaluation Components:**
+
+- **Test Data Loading**: Loads held-out test data for unbiased evaluation
+- **Classification Metrics**: Calculates accuracy, precision, recall, F1-score for intent classifier
+- **Language Model Metrics**: Computes perplexity and generation quality metrics
+- **Diversity Testing**: Evaluates generation diversity with different temperature settings
+- **Confidence Analysis**: Analyzes classification confidence distributions
+- **Detailed Reports**: Generates comprehensive classification reports and performance summaries
+
 ## Technical Implementation
 
 ### Dual-Component Architecture
@@ -265,6 +322,118 @@ Main training script orchestrating the complete hybrid player training pipeline.
 - **Transfer Learning**: Leverages pre-trained models for efficiency
 - **Fine-Tuning**: Domain adaptation for D&D-specific language
 - **Validation**: Comprehensive testing throughout pipeline
+
+## How the Hybrid Player Works
+
+### Data Flow Pipeline
+
+1. **Data Collection Phase**
+
+   - **CRD3 Source**: Extracts player utterances from D&D gameplay transcripts
+     - Filters out DM/narrator turns using configurable DM names
+     - Processes multi-file JSON structure with progress tracking
+   - **LIGHT Source**: Gathers player commands from text adventure games
+     - Extracts speech, actions, and emotes from structured data
+     - Handles both seen and unseen game scenarios
+
+2. **Intent Labeling Process**
+
+   - **Automatic Labeling**: Uses keyword matching for intent classification
+     - **EXPLORE**: Movement, examination, navigation keywords
+     - **ACTION**: Combat, item interaction, spell casting keywords
+     - **DIALOGUE**: Conversation, questions, social interaction keywords
+   - **Fallback Strategy**: Defaults to DIALOGUE when no keywords match
+   - **Quality Control**: Manual validation and refinement of labels
+
+3. **Model Training Pipeline**
+   - **Language Model**: Fine-tuned DistilGPT-2 on player utterances for response generation
+   - **Intent Classifier**: Trained DistilBERT on labeled data for intent recognition
+   - **Sequential Training**: Language model training followed by classifier training
+   - **Validation**: Comprehensive testing with held-out data
+
+### Inference Process
+
+When generating a player response during game simulation:
+
+1. **Context Input**: System receives game context (e.g., "You see a dragon blocking the path")
+2. **Response Generation**: Language model generates plausible player response based on learned patterns
+3. **Intent Classification**: Generated response is automatically classified into one of three intents
+4. **Confidence Scoring**: System provides confidence scores for intent predictions
+5. **Output**: Returns both response text and detected intent with confidence
+
+**Example Inference Flow**:
+
+```python
+# Input context
+context = "The party enters a dark dungeon with strange sounds echoing"
+
+# Language model generates response
+response = "I light my torch and carefully examine the walls for traps"
+
+# Intent classifier analyzes response
+intent = "EXPLORE"  # confidence: 0.89
+probabilities = {"EXPLORE": 0.89, "ACTION": 0.08, "DIALOGUE": 0.03}
+```
+
+### Integration with Director System
+
+The Hybrid Player serves multiple roles in the Director LLM framework:
+
+- **Automated Testing**: Provides consistent player responses during RL training
+- **Dynamic Reward Weighting**: Classifies responses to enable intent-aware reward adjustment
+- **Controlled Experimentation**: Allows systematic testing without human player variability
+- **Training Data Generation**: Creates diverse scenarios for policy improvement
+
+**Intent-Based Reward Weighting Example**:
+
+```python
+intent_weights = {
+    "EXPLORE": {"narrative": 0.8, "causal": 0.2},  # Prioritize world-building
+    "ACTION": {"narrative": 0.3, "causal": 0.7},   # Focus on logical consequences
+    "DIALOGUE": {"narrative": 0.6, "causal": 0.4}  # Balance storytelling and logic
+}
+```
+
+## Intent Classification System
+
+### Automatic Intent Labeling
+
+The hybrid player uses a sophisticated keyword-based system for automatically labeling player utterances:
+
+**EXPLORE Intent Keywords:**
+
+- Movement: "go", "move", "walk", "travel", "head", "enter", "exit"
+- Investigation: "look", "examine", "search", "check", "inspect", "scan"
+- Navigation: "find", "locate", "explore", "investigate", "follow"
+
+**ACTION Intent Keywords:**
+
+- Combat: "attack", "hit", "strike", "fight", "shoot", "stab", "slash"
+- Magic: "cast", "spell", "magic", "enchant", "summon", "conjure"
+- Items: "use", "activate", "open", "close", "pick", "take", "grab"
+
+**DIALOGUE Intent Keywords:**
+
+- Communication: "say", "tell", "ask", "speak", "talk", "discuss"
+- Social: "persuade", "convince", "negotiate", "question", "greet"
+- Information: "inquire", "request", "demand", "explain"
+
+**Labeling Process:**
+
+1. **Keyword Matching**: Utterances are scanned for intent-specific keywords
+2. **Priority System**: ACTION keywords take precedence over EXPLORE, EXPLORE over DIALOGUE
+3. **Fallback Strategy**: Utterances with no matches default to DIALOGUE intent
+4. **Manual Validation**: System supports manual review and correction of labels
+
+**Example Classifications:**
+
+```python
+"I search the room for hidden doors" → EXPLORE
+"I cast fireball at the goblin" → ACTION
+"I ask the innkeeper about local rumors" → DIALOGUE
+"Let's head north to the mountains" → EXPLORE
+"I draw my sword and attack" → ACTION
+```
 
 ## Usage
 
