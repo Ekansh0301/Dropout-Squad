@@ -4,7 +4,39 @@ This module implements supervised fine-tuning of Llama-2-7B for Dungeon Master r
 
 ## Purpose
 
-Creates a baseline Dungeon Master model through supervised learning on D&D dialogue data from the CRD3 dataset. This baseline serves as the foundation for subsequent multi-critic reinforcement learning training.
+Creates a baseline Dungeon Master model through supervised learning on combined D&D and fantasy dialogue data. This baseline serves as the foundation for subsequent multi-critic reinforcement learning training.
+
+## Dataset
+
+**Primary Dataset**: Data Splits (Combined LIGHT + CRD3)
+
+- **Location**: `../Data/splits/`
+- **Format**: Instruction-tuned format with DM system prompts
+- **Content**: Combined LIGHT fantasy dialogue and CRD3 D&D transcripts
+- **Structure**: Train/validation/test splits with consistent DM role formatting
+
+**Data Sources**:
+
+- **CRD3**: Critical Role D&D session transcripts with DM responses
+- **LIGHT**: Fantasy dialogue scenarios and character interactions
+- **Integration**: Both sources formatted with consistent DM system prompts
+
+**Sample Format**:
+
+```json
+{
+  "text": "<s>[INST] <<SYS>>\\nYou are an expert Dungeon Master...\\n<</SYS>>\\n\\nAs the Dungeon Master, describe a scene or respond to the player: [/INST] DM response </s>",
+  "response": "DM response text",
+  "source": "crd3" | "light"
+}
+```
+
+**Data Preprocessing**:
+
+- Instruction-tuned format for consistent DM behavior
+- System prompts defining DM role and responsibilities
+- Context preservation from both dialogue sources
+- Quality filtering for appropriate content
 
 ## Files Overview
 

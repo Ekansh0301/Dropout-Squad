@@ -6,6 +6,19 @@ This module implements causal consistency evaluation between player actions and 
 
 Evaluates the logical consistency and causal responsiveness of DM responses by using NLI entailment probability to measure how well a DM response follows from a player action. This critic ensures that generated responses maintain logical coherence with the established narrative context.
 
+## Dataset
+
+**Primary Dataset**: Causal Critic Training Data
+- **Location**: `../Data/causal_critic_training/`
+- **Format**: Premise-hypothesis pairs for NLI-based evaluation
+- **Structure**: `train/` and `val/` directories with processed examples
+
+**Data Source**: CRD3 Dataset Processing
+- **Raw Data**: Critical Role D&D session transcripts
+- **Extraction**: Player action → DM response pairs
+- **Processing**: Premise-hypothesis pair generation via `data_prep.py`
+
+
 ## Files Overview
 
 ### Core Files

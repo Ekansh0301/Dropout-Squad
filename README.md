@@ -133,6 +133,28 @@ Dropout-Squad/
 - **Training**: PyTorch, Transformers, TRL, PEFT
 - **Optimization**: 4-bit quantization, LoRA adapters, mixed precision
 
+## Datasets
+
+The project utilizes multiple datasets for comprehensive training:
+
+### Primary Datasets
+- **CRD3**: Critical Role D&D transcripts (~200 episodes, 2 campaigns)
+- **LIGHT**: Fantasy dialogue and action data (~20K training samples)
+- **ROCStories/TinyStories**: Narrative coherence training (~1.9GB stories)
+
+### Processed Training Data
+- **Data Splits**: Combined LIGHT+CRD3 for DM-SFT baseline training
+- **Critic Training**: 40,906 examples (30K ROCStories + 10.9K DM pairs)
+- **Causal Critic Training**: Premise-hypothesis pairs for NLI evaluation
+
+### Dataset Usage by Component
+- **DM-SFT**: Data Splits (instruction-tuned LIGHT+CRD3 combination)
+- **Narrative Critic**: Critic Training dataset with quality labels
+- **Causal Critic**: Causal critic training data for consistency evaluation
+- **Hybrid Player**: LIGHT dialogue data for player simulation
+- **PPO Training**: All datasets integrated with critic feedback
+
+*See `Data/README.md` for detailed dataset documentation and setup instructions.*
 
 ## Getting Started
 
@@ -143,8 +165,18 @@ Dropout-Squad/
    pip install accelerate bitsandbytes wandb
    ```
 
-## Dataset Link :  
-## Narrative Model : 
+2. **Dataset Setup**
+
+   ```bash
+   cd Data/
+   # Link datasets from main data directory
+   ln -s ../../data/crd3 ./crd3
+   ln -s ../../data/light_dialogue_processed ./light_dialogue_processed
+   ln -s ../../data/critic_training ./critic_training
+   ln -s ../../data/rocstories ./rocstories
+   ln -s ../../data/splits ./splits
+   ln -s ../../data/causal_critic_training ./causal_critic_training
+   ``` 
 
 ## Key Features
 

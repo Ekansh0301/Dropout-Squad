@@ -6,6 +6,49 @@ This module provides comprehensive evaluation tools for the Director LLM project
 
 Evaluates the complete multi-critic reinforcement learning system with research-grade metrics, statistical analysis, and publication-ready visualizations. Provides both automated evaluation and detailed manual testing capabilities.
 
+## Dataset Usage
+
+**Comprehensive Evaluation Across All Datasets**:
+
+### Primary Evaluation Data
+
+- **CRD3 Test Set**: Authentic D&D scenarios for realistic evaluation
+  - Purpose: Test DM response generation in actual D&D contexts
+  - Metrics: Narrative quality, causal consistency, response appropriateness
+- **LIGHT Test Set**: Fantasy dialogue evaluation scenarios
+  - Purpose: Assess fantasy dialogue understanding and generation
+  - Metrics: Character consistency, setting appropriateness, action coherence
+- **Data Splits Test Set**: Combined evaluation across both domains
+  - Purpose: Comprehensive baseline model performance assessment
+  - Metrics: Cross-domain generalization and consistency
+
+### Critic Evaluation
+
+- **Narrative Critic Validation**: 4,091 quality-labeled examples
+  - Source: Critic training validation set with ground truth labels
+  - Metrics: MSE, MAE, R² for quality prediction accuracy
+  - Analysis: Quality score distributions and correlation analysis
+- **Causal Critic Validation**: Premise-hypothesis test pairs
+  - Source: Causal critic training validation set
+  - Metrics: NLI accuracy, entailment score distributions
+  - Analysis: Logical consistency evaluation performance
+
+### Hybrid Player Evaluation
+
+- **LIGHT Validation Set**: Player behavior simulation testing
+  - Purpose: Assess player utterance generation quality
+  - Metrics: Intent classification accuracy, utterance diversity
+  - Analysis: Player behavior authenticity and variety
+
+### Multi-Dataset Statistical Analysis
+
+- **Cross-Domain Performance**: Evaluation across CRD3, LIGHT, and combined datasets
+- **Critic Correlation**: Analysis of narrative vs. causal critic agreement
+- **Intent Distribution**: Player action type distribution analysis
+- **Quality Metrics**: Linguistic diversity, repetition, vocabulary richness
+- **Domain Transfer**: Performance comparison between training and test domains
+
+
 ## Files Overview
 
 ### Core Files

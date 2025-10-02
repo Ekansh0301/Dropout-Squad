@@ -6,6 +6,59 @@ This module implements realistic player behavior simulation for reinforcement le
 
 Simulates realistic player behavior in D&D sessions to support multi-critic reinforcement learning training. The hybrid approach combines text generation (what players say) with intent classification (what players intend to do) to provide rich, contextual prompts for training the Director LLM.
 
+## Dataset
+
+**Primary Dataset**: LIGHT Dialogue Processed
+
+- **Location**: `../Data/light_dialogue_processed/`
+- **Format**: Text files with structured fantasy dialogue and action sequences
+- **Total Samples**: ~20,000+ training examples across different action types
+
+**Data Types and Usage**:
+
+- **Action Files**: `action_{split}.txt` - Character action prediction training
+  - Purpose: Train intent classifier to recognize player action types
+  - Content: Setting descriptions, character interactions, action labels
+- **Speech Files**: `speech_{split}.txt` - Dialogue generation training
+  - Purpose: Train language model to generate realistic player utterances
+  - Content: Fantasy dialogue with context and character personas
+- **Emote Files**: `emote_{split}.txt` - Emotional expression training
+  - Content: Character emotional responses and expressions
+- **Which Files**: `which_{split}.txt` - Action selection training
+  - Content: Decision-making scenarios for action type classification
+
+**Secondary Dataset**: CRD3 (D&D-Specific Examples)
+
+- **Source**: Critical Role session transcripts
+- **Purpose**: Domain-specific player behavior patterns
+- **Usage**: Supplement LIGHT data with authentic D&D player interactions
+- **Processing**: Extract player utterances and classify intent types
+
+**Intent Classification Categories**:
+
+- **EXPLORE**: Investigation, exploration, information-seeking actions
+- **ACTION**: Combat, physical actions, skill-based activities
+- **DIALOGUE**: Social interaction, conversation, roleplay scenarios
+
+**Dual Training Architecture**:
+
+1. **Language Model Component** (DistilGPT-2):
+
+   - Trained on speech/emote data for utterance generation
+   - Learns fantasy dialogue patterns and character voice
+   - Generates contextually appropriate player responses
+
+2. **Intent Classifier Component** (DistilBERT):
+   - Trained on action/which data for intent prediction
+   - Classifies player utterances into action categories
+   - Enables dynamic reward weighting in PPO training
+
+**Data Integration for PPO**:
+
+- Generates diverse player prompts during RL training
+- Provides intent classification for dynamic reward weighting
+- Maintains realistic player behavior patterns for training context
+
 ## Files Overview
 
 ### Core Files

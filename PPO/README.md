@@ -6,6 +6,28 @@ This module implements the core Multi-Critic Reinforcement Learning training pip
 
 Trains the Director LLM using multi-objective reinforcement learning that dynamically adjusts reward weights based on player action type. Combines narrative quality and causal consistency evaluation to produce contextually appropriate and engaging D&D responses.
 
+## Dataset Usage
+
+**Environment Data**: CRD3 Dataset
+
+- **Source**: Critical Role D&D session transcripts
+- **Purpose**: Provides realistic D&D scenarios and context for RL training
+- **Usage**: Dynamic episode sampling during PPO training
+- **Processing**: Episode segmentation and context extraction
+
+**Player Simulation**: LIGHT Dataset
+
+- **Source**: Fantasy dialogue and action data from hybrid player
+- **Purpose**: Generates diverse player prompts for RL training
+- **Usage**: Intent-classified prompts for dynamic reward weighting
+- **Processing**: Real-time player utterance generation during training
+
+**Reward Signals**: Multi-Critic Outputs
+
+- **Narrative Critic**: Trained on 40,906 quality-labeled examples
+- **Causal Critic**: Trained on premise-hypothesis pairs
+- **Integration**: Dynamic weighting based on player intent (EXPLORE/ACTION/DIALOGUE)
+
 ## Files Overview
 
 ### Core Files

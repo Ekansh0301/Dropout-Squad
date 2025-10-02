@@ -6,6 +6,37 @@ This module implements a DeBERTa-based regression model for assessing narrative 
 
 Evaluates the narrative quality of generated DM responses using a fine-tuned DeBERTa model. The critic assesses aspects like descriptiveness, engagement, creativity, and overall writing quality to provide reward signals for reinforcement learning training.
 
+## Dataset
+
+**Primary Dataset**: Critic Training Data
+
+- **Location**: `../Data/critic_training/`
+- **Total Examples**: 40,906 (36,815 train + 4,091 validation)
+- **Format**: Arrow files with structured narrative examples and quality labels
+
+**Data Composition**:
+
+- **ROCStories Source**: 30,000 examples from TinyStories dataset
+  - Purpose: Baseline narrative coherence understanding
+  - Content: Short, coherent stories for quality assessment training
+- **D&D Pairs Source**: 10,906 examples from DM response pairs
+  - Purpose: Domain-specific narrative quality training
+  - Content: Actual DM responses with quality annotations
+
+**Quality Categories** (10,571 examples each):
+
+- **Coherent**: High-quality, well-structured narratives
+- **Shuffled**: Scrambled text for negative examples
+- **Repetitive**: Repetitive text detection training
+- **Truncated**: 9,193 incomplete narrative examples
+
+**Data Preprocessing**:
+
+- Quality score normalization for regression training
+- Text cleaning and tokenization for DeBERTa input
+- Balanced sampling across quality categories
+- Domain-specific filtering for D&D content relevance
+
 ## Files Overview
 
 ### Core Files
@@ -254,7 +285,6 @@ models/narrative_critic/
 - **Qualitative Analysis**: Example predictions with explanations
 - **Error Analysis**: Common failure modes and improvements
 - **Correlation Analysis**: Agreement with human quality judgments
-
 
 ## Quality Examples
 
