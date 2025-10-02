@@ -1,0 +1,109 @@
+# DM-SFT Training Configuration - FAST MODE
+# Optimized for 3-day semester project timeline
+# Uses 4x GTX 1080 Ti (11GB VRAM each)
+
+project:
+  name: "director-llm-interim"
+  description: "Fast training for semester project interim submission"
+  
+# OPTIMIZATION: Using subset of data for faster iteration
+data:
+  train_path: "data/splits/train"
+  val_path: "data/splits/validation"
+  test_path: "data/splits/test"
+  
+  # REDUCED FOR INTERIM: Using 10% of data instead of 100%
+  # Full version: Use all 263,287 examples
+  # Interim version: Use 26,329 examples
+  max_train_samples: 26329  # 10% for speed
+  max_eval_samples: 3098    # 10% of validation
+  
+  # REDUCED FOR INTERIM: Shorter sequences for 2x speed
+  # Full version: 512 or 1024 tokens
+  # Interim version: 256 tokens
+  max_seq_length: 256
+
+model:
+  name: "microsoft/phi-2"
+  
+  # QLoRA 4-bit quantization (essential for 11GB VRAM)
+  load_in_4bit: true
+  bnb_4bit_quant_type: "nf4"
+  bnb_4bit_compute_dtype: "float16"  # GTX 1080 Ti doesn't support bfloat16
+  bnb_4bit_use_double_quant: true
+
+lora:
+  # REDUCED FOR INTERIM: Smaller rank for faster training
+  # Full version: r=16 or r=32
+  # Interim version: r=16 (good balance)
+  r: 16
+  lora_alpha: 32
+  lora_dropout: 0.05
+  
+  # Targeting only attention layers for speed
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - dense
+  
+  bias: "none"
+  task_type: "CAUSAL_LM"
+
+training:
+  output_dir: "models/sft_baseline_interim"
+  
+  # REDUCED FOR INTERIM: 1 epoch instead of 3
+  # Full version: 3 epochs (~10 hours)
+  # Interim version: 1 epoch (~3 hours)
+  num_train_epochs: 1
+  
+  # Batch size optimized for 4x 11GB GPUs
+  per_device_train_batch_size: 1
+  per_device_eval_batch_size: 1
+  gradient_accumulation_steps: 8  # Effective batch = 1*4*8 = 32
+  
+  # REDUCED FOR INTERIM: Less frequent checkpointing
+  # Full version: save_steps=500, eval_steps=500
+  # Interim version: save_steps=1000, eval_steps=1000
+  logging_steps: 25
+  save_strategy: "steps"
+  save_steps: 1000
+  save_total_limit: 2  # Only keep 2 checkpoints to save disk space
+  eval_strategy: "steps"
+  eval_steps: 1000
+  
+  # Learning rate and optimization
+  optim: "paged_adamw_8bit"
+  learning_rate: 2.0e-4
+  lr_scheduler_type: "cosine"
+  warmup_ratio: 0.03
+  warmup_steps: 100
+  weight_decay: 0.01
+  max_grad_norm: 1.0
+  
+  # Memory optimizations (essential for 11GB VRAM)
+  gradient_checkpointing: true
+  fp16: true
+  bf16: false
+  
+  # Multi-GPU settings for 4x GTX 1080 Ti
+  dataloader_num_workers: 4
+  dataloader_pin_memory: true
+  ddp_find_unused_parameters: false
+  
+  # Experiment tracking
+  report_to: "wandb"
+  run_name: "dm-sft-interim-10pct-1epoch"
+  logging_first_step: true
+  
+  # ADDED FOR INTERIM: Early stopping patience
+  load_best_model_at_end: true
+  metric_for_best_model: "eval_loss"
+
+hardware:
+  device_map: "null"
+  use_cpu: false
+
+# Reproducibility
+seed: 42
