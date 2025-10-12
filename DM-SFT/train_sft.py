@@ -2,13 +2,6 @@
 DM-SFT Training Script for Llama-2-7B with QLoRA optimization.
 Trains Director LLM baseline on D&D dialogue data.
 
-Optimizations for 3-day development cycle:
-- 10% data subset for faster training
-- Single epoch training
-- 256 token sequences
-- Efficient LoRA configuration
-
-Expected training time: 2-3 hours on 4x GTX 1080 Ti
 """
 
 import os
