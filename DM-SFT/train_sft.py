@@ -460,21 +460,6 @@ def train_model(model, tokenizer, train_dataset, eval_dataset, config):
     
     return trainer, train_result, eval_results
 
-def print_next_steps():
-    """Display post-training workflow instructions."""
-    print("\n" + "="*70)
-    print("NEXT STEPS")
-    print("="*70)
-    print("\n1. Test the trained model:")
-    print("   python scripts/test_sft_model.py")
-    print("\n2. Generate sample outputs:")
-    print("   python scripts/generate_samples.py")
-    print("\n3. Train critics (optional for interim):")
-    print("   python scripts/train_narrative_critic.py")
-    print("\n4. Evaluate on test set:")
-    print("   python scripts/evaluate_baseline.py")
-    print("\n" + "="*70)
-
 def main():
     """Execute complete training pipeline."""
     import os
@@ -530,7 +515,6 @@ def main():
     )
     
     # Display completion summary
-    print_next_steps()
     print("\n✓ Training pipeline complete!")
     print("="*70 + "\n")
 
