@@ -321,12 +321,5 @@ label_candidates:option1|option2|option3
 - **Causal Critic Training**: ~50MB (NLI training data)
 - **Total**: ~5.25GB recommended free space
 
-## Important Notes
-
-1. **Data Privacy**: All datasets are publicly available research datasets
-2. **Licensing**: Ensure compliance with individual dataset licenses
-3. **Updates**: Check for dataset updates and version compatibility
-4. **Preprocessing**: Some modules may require additional preprocessing steps
-5. **Memory**: Large datasets may require memory-efficient loading strategies
 
 ---
