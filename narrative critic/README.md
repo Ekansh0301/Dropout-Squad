@@ -324,4 +324,13 @@ Score: 0.28 (Very poor narrative quality)
 - **Narrative Analysis**: Systematic study of narrative quality factors
 - **Content Generation**: Quality control for automated writing
 - **Educational Tools**: Feedback systems for creative writing
-- **Cross-Domain**: Adaptation to other narrative evaluation tasks
+- **Cross-Domain**: Adaptation to other narrative evaluation tas
+
+
+### Find Trained weights at 
+
+https://iiithydresearch-my.sharepoint.com/:f:/g/personal/jayant_g_research_iiit_ac_in/EkRB3fIyNoNDlkCbtGfbzpwBLUXR7PlOIkGitap7J9o5pQ?e=BqhPDP
+
+
+https://iiithydresearch-my.sharepoint.com/:f:/g/personal/jayant_g_research_iiit_ac_in/EncAETRa38RKnKcz9_om_SQBUegp4A_FzJXbN8Neyb8XAg?e=t24fST
+
