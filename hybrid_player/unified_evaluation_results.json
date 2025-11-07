@@ -1,0 +1,155 @@
+{
+  "model_info": {
+    "model_path": "models/language_model/final",
+    "device": "cuda",
+    "test_data_size": 21484
+  },
+  "perplexity_analysis": {
+    "standard_perplexity": 22.689504623413086,
+    "standard_loss": 3.121902353220647,
+    "batched_perplexity": 638148.5,
+    "filtered_perplexity": 22.357147216796875,
+    "filtered_sample_size": 38,
+    "total_samples": 100,
+    "data_source": "test_split"
+  },
+  "generation_quality": {
+    "I look around and": {
+      "category": "exploration",
+      "responses": {
+        "temp_0.5": "I say  Hey, Pike! You're the only one that can hear me. You are the",
+        "temp_0.7": "see if there's any guards standing behind me. I don't know if any of them are in",
+        "temp_0.9": "I go  You look very familiar. Is it not familiar? Is there any type of-- Does"
+      },
+      "response_lengths": {
+        "temp_0.5": 15,
+        "temp_0.7": 17,
+        "temp_0.9": 16
+      }
+    },
+    "I attack the": {
+      "category": "combat",
+      "responses": {
+        "temp_0.5": "thing that's holding him. I'm going to cast Detect Magic on the creature. That's a",
+        "temp_0.7": "gem. It's a very good gem, but I'm going to just start swinging at it,",
+        "temp_0.9": "tree and I take off running. So we've got no weapons, so we're going to hide"
+      },
+      "response_lengths": {
+        "temp_0.5": 15,
+        "temp_0.7": 15,
+        "temp_0.9": 16
+      }
+    },
+    "I say to the": {
+      "category": "social",
+      "responses": {
+        "temp_0.5": "group, \"Hey, you guys, we're going to be really nice to you, and we",
+        "temp_0.7": "other guy, just like, \"No, you're not here!\" And I say, I'm",
+        "temp_0.9": "one that I'm not in, I say, \"I don't feel safe, Grog.\""
+      },
+      "response_lengths": {
+        "temp_0.5": 14,
+        "temp_0.7": 12,
+        "temp_0.9": 12
+      }
+    },
+    "The magic spell": {
+      "category": "magic",
+      "responses": {
+        "temp_0.5": "is a concentration spell. It's not concentration. And I'm going to cast it at level one",
+        "temp_0.7": "is really-- wow. I can't believe it's magic. It's really nice. You know",
+        "temp_0.9": "is that this is a good thing. If we destroy the artifact, then we can make a great"
+      },
+      "response_lengths": {
+        "temp_0.5": 16,
+        "temp_0.7": 13,
+        "temp_0.9": 18
+      }
+    },
+    "My sword": {
+      "category": "combat",
+      "responses": {
+        "temp_0.5": "'s gone. I don't know why. It's useless. So I'm going to use my",
+        "temp_0.7": "'s going to blow up to the floor. And I'm going back to my-- I don't",
+        "temp_0.9": "'s gone. It's on my side. So no one will run out. Just because they're"
+      },
+      "response_lengths": {
+        "temp_0.5": 14,
+        "temp_0.7": 16,
+        "temp_0.9": 15
+      }
+    },
+    "The treasure chest": {
+      "category": "exploration",
+      "responses": {
+        "temp_0.5": ". The treasure. That's what we're looking for. We're going to find the treasure in",
+        "temp_0.7": ". You know, I think we're going to go to the other side of it. We'll",
+        "temp_0.9": ", yeah. And then I will have to use a bonus action to hide from my staff. I"
+      },
+      "response_lengths": {
+        "temp_0.5": 15,
+        "temp_0.7": 16,
+        "temp_0.9": 18
+      }
+    },
+    "I cast a": {
+      "category": "magic",
+      "responses": {
+        "temp_0.5": "spell on the one that I'm not using. I cast it on myself. And I run up",
+        "temp_0.7": "Lightning Bolt on her. I cast it. Can I do a Mass Cure Wounds? (laughter",
+        "temp_0.9": "spell that I've never seen before. I'm going to move forward. Moving forward, as far"
+      },
+      "response_lengths": {
+        "temp_0.5": 17,
+        "temp_0.7": 15,
+        "temp_0.9": 15
+      }
+    },
+    "The dragon": {
+      "category": "combat",
+      "responses": {
+        "temp_0.5": "'s lair. I'm going to run up and-- I don't know what to do. (",
+        "temp_0.7": "came back to life. He's had a lot of adventures. I was curious about it. Why",
+        "temp_0.9": "is gone. The big dragon has taken care of it. We cannot even talk for him. He"
+      },
+      "response_lengths": {
+        "temp_0.5": 15,
+        "temp_0.7": 16,
+        "temp_0.9": 17
+      }
+    },
+    "I ask the": {
+      "category": "social",
+      "responses": {
+        "temp_0.5": "guard  Are you sure you're okay, are you? We're going to get you back.",
+        "temp_0.7": "other guy to come with us. I don't know. Oh, I was wondering if we could",
+        "temp_0.9": "guard if he likes it or not. I ask him yes. Just checking. He'll be fine"
+      },
+      "response_lengths": {
+        "temp_0.5": 14,
+        "temp_0.7": 16,
+        "temp_0.9": 16
+      }
+    },
+    "In the dungeon": {
+      "category": "exploration",
+      "responses": {
+        "temp_0.5": "? I can't see through it. I'm going to go in the hallway. In the lava",
+        "temp_0.7": ". You're in your room. It's a dungeon? You've been here a long time.",
+        "temp_0.9": ", and you can't see it if you take a peek back out of the Bag of Holding."
+      },
+      "response_lengths": {
+        "temp_0.5": 16,
+        "temp_0.7": 14,
+        "temp_0.9": 18
+      }
+    }
+  },
+  "response_analysis": {
+    "avg_response_length": 15.4,
+    "response_length_std": 1.5187714333192688,
+    "unique_response_ratio": 1.0,
+    "meaningful_response_ratio": 0.9666666666666667,
+    "total_responses_analyzed": 30
+  }
+}
