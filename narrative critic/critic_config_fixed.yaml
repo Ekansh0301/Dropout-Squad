@@ -1,0 +1,56 @@
+# Narrative Critic Training Configuration - FIXED FOR MODEL COLLAPSE
+# This configuration prevents the model from collapsing to constant predictions
+
+model:
+  name: "microsoft/deberta-v3-base"
+  num_labels: 1
+  problem_type: "regression"
+
+data:
+  train_path: "critic_training/train"
+  val_path: "critic_training/val"
+  max_seq_length: 128
+
+training:
+  output_dir: "models/narrative_critic_fixed"
+  num_train_epochs: 3
+
+  # FIXED: Smaller batch size for stability
+  per_device_train_batch_size: 16  # Reduced from 32
+  per_device_eval_batch_size: 16
+  gradient_accumulation_steps: 2    # Effective batch = 32
+
+  # FIXED: Lower learning rate to prevent collapse
+  learning_rate: 1e-5  # Reduced from 3e-5
+  lr_scheduler_type: "linear"  # Changed from cosine
+  warmup_ratio: 0.2  # Increased warmup
+  weight_decay: 0.001  # Reduced regularization
+  max_grad_norm: 0.5   # Stronger gradient clipping
+
+  # Evaluation and checkpointing
+  logging_steps: 50    # More frequent logging
+  eval_strategy: "steps"
+  eval_steps: 200      # More frequent evaluation
+  save_strategy: "steps"
+  save_steps: 200
+  save_total_limit: 3  # Keep more checkpoints
+  
+  # CRITICAL: Early stopping to prevent collapse
+  load_best_model_at_end: true
+  metric_for_best_model: "eval_mae"  # Changed to MAE (more stable)
+  greater_is_better: false
+
+  # Memory optimization
+  fp16: true
+  dataloader_num_workers: 2
+  dataloader_pin_memory: true
+
+  report_to: "none"
+
+seed: 42
+
+# ADDED: Additional safeguards
+safeguards:
+  check_output_variance: true  # Ensure outputs aren't constant
+  min_output_std: 0.05         # Minimum standard deviation of predictions
+  max_loss_increase: 0.1       # Max loss increase before stopping

@@ -12,6 +12,7 @@ from datetime import datetime
 from transformers import (
     AutoModelForSequenceClassification,
     AutoTokenizer,
+    DebertaV2Tokenizer,
     TrainingArguments,
     Trainer,
     DataCollatorWithPadding,
@@ -75,7 +76,13 @@ def compute_metrics(eval_pred):
         'accuracy_0.2': within_threshold
     }
 
-def load_config(config_path="critic_config_fast.yaml"):
+# def load_config(config_path="critic_config_fast.yaml"):
+#     """Load training configuration from YAML file."""
+#     print(f"\nLoading config: {config_path}")
+#     with open(config_path, 'r') as f:
+#         return yaml.safe_load(f)
+
+def load_config(config_path="critic_config.yaml"):
     """Load training configuration from YAML file."""
     print(f"\nLoading config: {config_path}")
     with open(config_path, 'r') as f:
@@ -125,7 +132,8 @@ def main():
         problem_type=config['model']['problem_type']
     )
     
-    tokenizer = AutoTokenizer.from_pretrained(config['model']['name'])
+    # Use DebertaV2Tokenizer directly (slow tokenizer) to avoid fast tokenizer issues
+    tokenizer = DebertaV2Tokenizer.from_pretrained(config['model']['name'])
     
     total_params = sum(p.numel() for p in model.parameters())
     print(f"\n✓ Model: {config['model']['name']}")
