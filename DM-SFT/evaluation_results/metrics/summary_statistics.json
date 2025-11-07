@@ -1,0 +1,108 @@
+{
+  "total_samples": 45,
+  "categories": 9,
+  "category_breakdown": {
+    "Exploration": 9,
+    "Dialogue": 9,
+    "Combat": 6,
+    "Problem Solving": 6,
+    "Social": 3,
+    "Magic": 3,
+    "Stealth": 3,
+    "Investigation": 3,
+    "Survival": 3
+  },
+  "word_count": {
+    "mean": 122.33333333333333,
+    "std": 5.427204202399745,
+    "min": 111,
+    "max": 132,
+    "median": 121.0
+  },
+  "sentence_length": {
+    "mean": 10.359624024849515,
+    "std": 3.262201834278163,
+    "median": 9.307692307692308
+  },
+  "expected_elements": {
+    "mean_ratio": 0.1648148148148148,
+    "std": 0.22924508912219735,
+    "samples_with_all_elements": 0,
+    "samples_with_no_elements": 26
+  },
+  "dnd_terms": {
+    "mean_count": 1.3777777777777778,
+    "std": 2.102908039411667,
+    "max": 9
+  },
+  "quality_indicators": {
+    "repetition_score_mean": 0.46167218361433715,
+    "cutoff_rate": 0.8666666666666667,
+    "complete_responses": 6
+  },
+  "by_category": {
+    "Combat": {
+      "count": 6,
+      "avg_word_count": 119.33333333333333,
+      "avg_expected_elements_ratio": 0.375,
+      "avg_dnd_terms": 2.8333333333333335,
+      "avg_repetition": 0.5056827728619173
+    },
+    "Exploration": {
+      "count": 9,
+      "avg_word_count": 124.44444444444444,
+      "avg_expected_elements_ratio": 0.09259259259259259,
+      "avg_dnd_terms": 0.6666666666666666,
+      "avg_repetition": 0.46950023234769767
+    },
+    "Dialogue": {
+      "count": 9,
+      "avg_word_count": 123.55555555555556,
+      "avg_expected_elements_ratio": 0.037037037037037035,
+      "avg_dnd_terms": 0.5555555555555556,
+      "avg_repetition": 0.4125417134910354
+    },
+    "Problem Solving": {
+      "count": 6,
+      "avg_word_count": 120.66666666666667,
+      "avg_expected_elements_ratio": 0.2916666666666667,
+      "avg_dnd_terms": 0.8333333333333334,
+      "avg_repetition": 0.4118049583317018
+    },
+    "Social": {
+      "count": 3,
+      "avg_word_count": 125.66666666666667,
+      "avg_expected_elements_ratio": 0.0,
+      "avg_dnd_terms": 0.0,
+      "avg_repetition": 0.46681625640569924
+    },
+    "Magic": {
+      "count": 3,
+      "avg_word_count": 117.66666666666667,
+      "avg_expected_elements_ratio": 0.16666666666666666,
+      "avg_dnd_terms": 2.6666666666666665,
+      "avg_repetition": 0.4302920466842494
+    },
+    "Stealth": {
+      "count": 3,
+      "avg_word_count": 121.33333333333333,
+      "avg_expected_elements_ratio": 0.08333333333333333,
+      "avg_dnd_terms": 1.6666666666666667,
+      "avg_repetition": 0.598587967121811
+    },
+    "Investigation": {
+      "count": 3,
+      "avg_word_count": 123.66666666666667,
+      "avg_expected_elements_ratio": 0.25,
+      "avg_dnd_terms": 3.0,
+      "avg_repetition": 0.508850506589902
+    },
+    "Survival": {
+      "count": 3,
+      "avg_word_count": 122.66666666666667,
+      "avg_expected_elements_ratio": 0.25,
+      "avg_dnd_terms": 2.3333333333333335,
+      "avg_repetition": 0.4394346775099572
+    }
+  }
+}

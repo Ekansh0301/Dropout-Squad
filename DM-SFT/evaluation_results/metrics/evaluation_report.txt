@@ -1,0 +1,129 @@
+================================================================================
+SFT MODEL EVALUATION REPORT
+================================================================================
+
+Model Checkpoint: models/sft_phi2_improved/checkpoint-9000
+Evaluation Date: 2025-11-06 22:07:11
+
+--------------------------------------------------------------------------------
+OVERALL STATISTICS
+--------------------------------------------------------------------------------
+
+Total Samples Generated: 45
+Categories Tested: 9
+
+Category Breakdown:
+  - Exploration: 9 samples
+  - Dialogue: 9 samples
+  - Combat: 6 samples
+  - Problem Solving: 6 samples
+  - Social: 3 samples
+  - Magic: 3 samples
+  - Stealth: 3 samples
+  - Investigation: 3 samples
+  - Survival: 3 samples
+
+--------------------------------------------------------------------------------
+RESPONSE QUALITY METRICS
+--------------------------------------------------------------------------------
+
+Word Count:
+  Mean: 122.3 ± 5.4
+  Range: 111 - 132
+  Median: 121.0
+
+Sentence Length:
+  Mean: 10.4 ± 3.3 words/sentence
+  Median: 9.3 words/sentence
+
+Expected Elements Coverage:
+  Mean Coverage: 16.5%
+  Samples with All Elements: 0 (0.0%)
+  Samples with No Elements: 26 (57.8%)
+
+D&D Terminology Usage:
+  Mean Count: 1.4 ± 2.1 terms/response
+  Max Count: 9
+
+Quality Indicators:
+  Repetition Score: 0.462 (lower is better)
+  Complete Responses: 6 (13.3%)
+  Cutoff Rate: 86.7%
+
+--------------------------------------------------------------------------------
+PER-CATEGORY ANALYSIS
+--------------------------------------------------------------------------------
+
+Combat:
+  Samples: 6
+  Avg Word Count: 119.3
+  Expected Elements: 37.5%
+  D&D Terms: 2.8
+  Repetition: 0.506
+
+Exploration:
+  Samples: 9
+  Avg Word Count: 124.4
+  Expected Elements: 9.3%
+  D&D Terms: 0.7
+  Repetition: 0.470
+
+Dialogue:
+  Samples: 9
+  Avg Word Count: 123.6
+  Expected Elements: 3.7%
+  D&D Terms: 0.6
+  Repetition: 0.413
+
+Problem Solving:
+  Samples: 6
+  Avg Word Count: 120.7
+  Expected Elements: 29.2%
+  D&D Terms: 0.8
+  Repetition: 0.412
+
+Social:
+  Samples: 3
+  Avg Word Count: 125.7
+  Expected Elements: 0.0%
+  D&D Terms: 0.0
+  Repetition: 0.467
+
+Magic:
+  Samples: 3
+  Avg Word Count: 117.7
+  Expected Elements: 16.7%
+  D&D Terms: 2.7
+  Repetition: 0.430
+
+Stealth:
+  Samples: 3
+  Avg Word Count: 121.3
+  Expected Elements: 8.3%
+  D&D Terms: 1.7
+  Repetition: 0.599
+
+Investigation:
+  Samples: 3
+  Avg Word Count: 123.7
+  Expected Elements: 25.0%
+  D&D Terms: 3.0
+  Repetition: 0.509
+
+Survival:
+  Samples: 3
+  Avg Word Count: 122.7
+  Expected Elements: 25.0%
+  D&D Terms: 2.3
+  Repetition: 0.439
+
+--------------------------------------------------------------------------------
+CONCLUSIONS
+--------------------------------------------------------------------------------
+
+⚠️ Model could improve on incorporating expected D&D elements
+⚠️ Model could use more D&D-specific terminology
+⚠️ Model shows some repetitive patterns
+⚠️ High rate of incomplete responses - consider increasing max_length
+
+================================================================================

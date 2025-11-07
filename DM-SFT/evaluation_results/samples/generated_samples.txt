@@ -1,0 +1,849 @@
+================================================================================
+Category: Combat
+Variant: 1
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Player: I attack the goblin with my sword.
+Dungeon Master:
+
+Response:
+He's not that far away. So you can attack it from there. So you can do that. You do not have to move, so you can do that, and then you can go back to your original spot. That is your action. You're going to go ahead and make a strength saving throw. It's a strength saving throw, so it's your strength plus your modifier. That's your strength. I'll say it's your strength plus two because you have your short rest. It's your strength plus two. So that's eight points of damage. That's enough to pull the rope. It has to be strength, and you're pulling the rope. That's a success. That is going to end your turn. N
+
+Metrics:
+  - Word Count: 119
+  - Expected Elements: 2/50.0%
+  - D&D Terms: 4
+  - Repetition Score: 0.462
+
+================================================================================
+Category: Combat
+Variant: 2
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Player: I attack the goblin with my sword.
+Dungeon Master:
+
+Response:
+You can't, because he's not going to move. You can only move around. That's your movement, not your attack. But you can move around him. You can move around him. But you cannot attack him. You attack the goblin, you get your turn. And then you can move around the goblin. You can go around the goblin. So you can move around the goblin, you can attack the goblin, and you can then move around the goblin. So, what are you going to do? You can move around the goblin, you can attack the goblin, or you can both go. (laughter) Okay, I'll go ahead and do it, because you're in my way. I'll go ahead and go ahead
+
+Metrics:
+  - Word Count: 119
+  - Expected Elements: 1/25.0%
+  - D&D Terms: 1
+  - Repetition Score: 0.605
+
+================================================================================
+Category: Combat
+Variant: 3
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Player: I attack the goblin with my sword.
+Dungeon Master:
+
+Response:
+You take one point of piercing damage. That ends your turn, Vex. It's now the goblin's turn. The goblin's going to move up to this point on the wall. It's going to make another constitution saving throw. That's going to be a 12. Roll for that. That's going to be a failure. It's going to be a 12. It's going to take the damage. It's going to attempt to rip off the mask. That is going to be a 12. That's going to be a failure. You have disadvantage on it because of your attack. So it does not succeed. It takes the damage. It's going to attempt to rip off the mask. That is going to be a 12
+
+Metrics:
+  - Word Count: 120
+  - Expected Elements: 3/75.0%
+  - D&D Terms: 5
+  - Repetition Score: 0.558
+
+================================================================================
+Category: Combat
+Variant: 1
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Player: I cast fireball at the group of orcs.
+Dungeon Master:
+
+Response:
+He's currently being blasted by the fireball. It's going to go ahead and take two attacks on you with the axe. You're currently being attacked from the side, and then you're going to go ahead and go ahead and take two attacks against you, Keyleth. All right, that is a 20. That's a failure. That's going to be a natural 20, which is a failure. All right, that ends your turn. Top of the round, that brings us to Vax. Vax, you're up. You're now being blasted from the side and in the air. You're currently being attacked by two orc axes and two orc hammers. You're now going to go ahead and go ahead and attempt
+
+Metrics:
+  - Word Count: 117
+  - Expected Elements: 0/0.0%
+  - D&D Terms: 1
+  - Repetition Score: 0.496
+
+================================================================================
+Category: Combat
+Variant: 2
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Player: I cast fireball at the group of orcs.
+Dungeon Master:
+
+Response:
+You can't see them. They're in a cloud. You don't have a view. You can't see any of them. But you do know that they are in the cloud. It's now their turn. The two that are currently being pursued by the rest of the party. They're going to do a lot of damage, but they're not going to be able to get a second strike. They're going to make their save, then they're going to move. They're going to move away from the cloud, which is where you guys are. They're going to go ahead and go for two of you. They'll move up against Beau and Jester. They're going to go ahead and make an attack against you.
+
+Metrics:
+  - Word Count: 120
+  - Expected Elements: 2/50.0%
+  - D&D Terms: 3
+  - Repetition Score: 0.450
+
+================================================================================
+Category: Combat
+Variant: 3
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Player: I cast fireball at the group of orcs.
+Dungeon Master:
+
+Response:
+You did, did you? Okay. That ends your turn, Jester. It's now the orcs' turn. The one that took damage from the first attack is going to make another attack at you with its longsword. As it does, the other one that saw that you guys were attacking it is going to also make an attack with its axe at you. That's going to be a 19 against you, Jester. Go ahead and roll damage. That's a natural 20, so you take six points of damage. The other one against you is a natural 20, so that's ten points of damage to you. That is a 19 total. That is a failure. That's going to end their turn. It's now the
+
+Metrics:
+  - Word Count: 121
+  - Expected Elements: 1/25.0%
+  - D&D Terms: 3
+  - Repetition Score: 0.463
+
+================================================================================
+Category: Exploration
+Variant: 1
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Player: I search the room for hidden doors.
+Dungeon Master:
+
+Response:
+He's not that way. He's just a nice guy. I am going to leave you with that. The only thing I will say is, you have good fortune. The world is your oyster. It's your life. You can be anything you want to be. All you have to do is make your dreams come true. So, what do you want to be when you grow up? What is your dream? What do you wish to be when you grow up? Tell me about your dreams. Tell me your hopes. Tell me your desires. Tell me what you wish to be when you grow up. You have only a short time to live. You have to make the most of it. Tell me your dreams. I promise
+
+Metrics:
+  - Word Count: 126
+  - Expected Elements: 0/0.0%
+  - D&D Terms: 0
+  - Repetition Score: 0.500
+
+================================================================================
+Category: Exploration
+Variant: 2
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Player: I search the room for hidden doors.
+Dungeon Master:
+
+Response:
+If you don't see one, you should try to. There is one hidden behind that door. This is the one that leads to the kitchen. You can't see it from here. It's behind the table. If you go around the corner you can see it. If you can't see it, you should try to get closer. There are a few spots that are not covered by drapery that would let in light. There is one that is an opening in the wall that looks like a window that is partially obscured by a curtain that is draped over it. The other two you can see. The one that leads to the kitchen is hidden behind a large, heavy table. The one that leads to the master bedroom is behind a
+
+Metrics:
+  - Word Count: 130
+  - Expected Elements: 0/0.0%
+  - D&D Terms: 0
+  - Repetition Score: 0.500
+
+================================================================================
+Category: Exploration
+Variant: 3
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Player: I search the room for hidden doors.
+Dungeon Master:
+
+Response:
+You find one, yes. It's partially blocked by a piece of furniture, but you manage to push it and you find that there is a very small door that is about two inches across that's barely visible from the outside, but that's a door that leads into the basement of the castle. That's where the cellar is, so that's where the basement is. Go ahead and roll a stealth check for me. I'll say, you have advantage because you're in a dark, enclosed space. You're in a familiar space. You have advantage on stealth checks, so roll for the stealth check. So roll a d20. Add your dexterity modifier. Roll a d20. Roll for the stealth check. You have advantage on that
+
+Metrics:
+  - Word Count: 122
+  - Expected Elements: 2/50.0%
+  - D&D Terms: 5
+  - Repetition Score: 0.434
+
+================================================================================
+Category: Exploration
+Variant: 1
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Dungeon Master: As you enter the ancient forest at twilight,
+
+Response:
+you can see that the trees have begun to close in on each other, it's not quite night time yet, it's not quite day. The forest is thick, and it's not as dark as it is on the outskirts of the village. You can see that the occasional patch of light that is coming through the trees, as well as the moonlight, is breaking through. It's still a bit of a distance, but it's like a sliver of light. It's a beautiful scene. You can see, as you enter, the trees begin to close in on each other, the canopy is thicker and thicker. It's starting to get dark. You can see the light that is coming through the trees and the moonlight is
+
+Metrics:
+  - Word Count: 124
+  - Expected Elements: 0/0.0%
+  - D&D Terms: 0
+  - Repetition Score: 0.508
+
+================================================================================
+Category: Exploration
+Variant: 2
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Dungeon Master: As you enter the ancient forest at twilight,
+
+Response:
+you can feel the air begin to shift around you. It's a very eerie feeling. The temperature of the air has dropped, it's almost like you've entered a different world. You glance about and you can see the faint glimmer of stars in the sky. It's a dark sky, but there are stars in the sky, you can make out the shape of the moon. It's not full yet, but it's beginning to grow more and more. It's a little less full, but it's a little more than just dark. You glance about, and you can see there are a few small, dark shapes, like small, almost like a pack of wolves, but they're not moving. You can see there's a
+
+Metrics:
+  - Word Count: 121
+  - Expected Elements: 0/0.0%
+  - D&D Terms: 0
+  - Repetition Score: 0.463
+
+================================================================================
+Category: Exploration
+Variant: 3
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Dungeon Master: As you enter the ancient forest at twilight,
+
+Response:
+the air is damp and chilly, and you can feel the mist beginning to settle in the forest. It's still a bit foggy. You guys begin to make your way deeper into the forest, and you can see the faint outlines of a few trees as they begin to get closer. You can see the first few small clusters of small, white mushrooms beginning to sprout from the ground. You can see the faint light of a few small fireflies beginning to flicker in the distance, and you can hear the distant sound of crickets and other small nocturnal creatures beginning to wake up as the night begins to slowly creep in. And you guys begin to make your way deeper and deeper into the forest. A few more minutes pass.
+
+Metrics:
+  - Word Count: 131
+  - Expected Elements: 0/0.0%
+  - D&D Terms: 0
+  - Repetition Score: 0.481
+
+================================================================================
+Category: Exploration
+Variant: 1
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Player: I examine the mysterious altar in the center of the room.
+Dungeon Master:
+
+Response:
+He's currently being dragged back by the other guard. He's like (grunts). The other guard is dragging him back to the outside. As you guys are rushing back, you glance back at the altar. The rest of the servants have all gathered and are about to finish up what they were doing. They're now like (groans). The doors are locked, but they're in the process of trying to break in. The guards are doing the same. You can see the guards that were previously dragging them are now pushing them forward, trying to force them through the door. And as you glance back, you can see the doors of the church are now open. You can see the other guards are still trying to break in, but
+
+Metrics:
+  - Word Count: 127
+  - Expected Elements: 0/0.0%
+  - D&D Terms: 0
+  - Repetition Score: 0.465
+
+================================================================================
+Category: Exploration
+Variant: 2
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Player: I examine the mysterious altar in the center of the room.
+Dungeon Master:
+
+Response:
+You can't see the altar, you can only see the stone. You have no idea what's beyond that stone. You guys step back. The room is about 50 feet in diameter. It's a small room. The altar is about 12 feet in diameter. The stone that surrounds it is about that wide. You can see the stone, but you can't see anything beyond it. It is this solid, black stone that seems to be part of the actual construction of this. There are no other details that you can make out from your distance. You are not very familiar with stone construction. You guys all step back and look at each other. You guys are now, in the center of this room, looking at this large, solid black
+
+Metrics:
+  - Word Count: 128
+  - Expected Elements: 1/33.3%
+  - D&D Terms: 0
+  - Repetition Score: 0.406
+
+================================================================================
+Category: Exploration
+Variant: 3
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Player: I examine the mysterious altar in the center of the room.
+Dungeon Master:
+
+Response:
+You take one look at the altar and it's completely intact, with no damage, and it looks like it's a very small altar. You can see the base of it, and there is a circular base that has a little bowl that is about the size of a large wine glass. It's filled with an extremely thick, very red-like, blood-like liquid. It's not wine, it looks like it's a blood-like liquid. It's not dried blood, it's not even dried blood-like liquid. It's a very viscous liquid, and it's almost like it's a viscous blood-like liquid. There is a small, white stone that's set into the base of the altar. It looks
+
+Metrics:
+  - Word Count: 111
+  - Expected Elements: 0/0.0%
+  - D&D Terms: 1
+  - Repetition Score: 0.468
+
+================================================================================
+Category: Dialogue
+Variant: 1
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Dungeon Master: A mysterious hooded figure approaches your party in the tavern.
+
+Response:
+He has no face, but his eyes are a bright yellow, and he is wearing this long, tattered robe. He goes, "Ah, you have taken the first step toward the path of the Great Hunt. If you wish to join us on this adventure, I need to know your intentions, your skill, and your willingness to make the journey. Will you be willing to be a part of this great hunt?" and he steps into the tavern. He pulls the robe up and you can see there is a pocket, and he reaches down and pulls out this small vial that is filled with a bright yellow liquid. It has a faint magical glow to it. He hands it to you, says, "This is the elixir of
+
+Metrics:
+  - Word Count: 127
+  - Expected Elements: 0/0.0%
+  - D&D Terms: 0
+  - Repetition Score: 0.354
+
+================================================================================
+Category: Dialogue
+Variant: 2
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Dungeon Master: A mysterious hooded figure approaches your party in the tavern.
+
+Response:
+You can't see the figure, and the figure approaches. "I have some news. I've been to the castle, and it's under siege by the barbarians. They've begun to tear at the wall. If they succeed, they could take your city. I've seen what they've done to the nearby towns. I'm sorry. I have to go. I have to fight." He steps back. You see this hooded figure steps forward. You can see this hooded cloak, this long, hooded cloak that is dark blue with gold embroidery. This hood is wrapped around. The hood itself is a deep purple with gold embroidery, and you can see this hooded figure that is this long, thin
+
+Metrics:
+  - Word Count: 113
+  - Expected Elements: 0/0.0%
+  - D&D Terms: 1
+  - Repetition Score: 0.389
+
+================================================================================
+Category: Dialogue
+Variant: 3
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Dungeon Master: A mysterious hooded figure approaches your party in the tavern.
+
+Response:
+You can see there is a hooded, darkly draped cloak, and this hood that seems to be pulled over a bit. There is this very gnarled, thick, long nose that's peeking out of the edge of this cloak, and these long, jagged teeth. A very large, muscular figure walks up, and you can see the eyes are almost glowing in the darkness. They are just this very, very intense, white glow to them. They step forward, and there's a moment where it's like this moment of pause. You can see this face in the darkness, and you can see the two of them go, "I am, The Mad Master. You have my attention. What is it that you seek
+
+Metrics:
+  - Word Count: 119
+  - Expected Elements: 0/0.0%
+  - D&D Terms: 0
+  - Repetition Score: 0.361
+
+================================================================================
+Category: Dialogue
+Variant: 1
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Player: I ask the innkeeper about rumors in town.
+Dungeon Master:
+
+Response:
+He says no rumors, but the other travelers are worried. They say the guards are not at their best. The people are not happy. It's been a few months since they have had any food. I have heard of some of the guards becoming violent and even killing the people. It's getting out of hand. I do not want to see this happen. I want to talk to the guards and tell them to stop their tyranny. I just wish I could get the attention of the guards. Maybe if I can get to the castle, I can talk to them there. Can you go and talk to them? I will be waiting. Just let me know when you come back. I'll know. What about you? Where are you going
+
+Metrics:
+  - Word Count: 130
+  - Expected Elements: 1/33.3%
+  - D&D Terms: 1
+  - Repetition Score: 0.362
+
+================================================================================
+Category: Dialogue
+Variant: 2
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Player: I ask the innkeeper about rumors in town.
+Dungeon Master:
+
+Response:
+If you would, I could get you a glass of wine, but the price would be your silence. Do you not wish to speak? Your silence will be your salvation. I will give you what you need. You may speak after that. Now, what is your business? Are you looking for something? I may have something that will help. If you are searching for something, I may have what you seek. I have something that can save you. Something that can protect you. I have something that can make you immortal. Do you have enough money to buy something that can protect you? Do you have enough to protect yourself? I have something that can do all that. Do you have enough to protect yourself? Do you have enough to
+
+Metrics:
+  - Word Count: 130
+  - Expected Elements: 0/0.0%
+  - D&D Terms: 1
+  - Repetition Score: 0.554
+
+================================================================================
+Category: Dialogue
+Variant: 3
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Player: I ask the innkeeper about rumors in town.
+Dungeon Master:
+
+Response:
+You know, I heard a rumor that the king and queen were married before they were allowed to. It was a beautiful wedding and they were so in love. They promised to be together forever, but they broke up after a few years. I heard they got married again. I don't know if it's true, but I thought I'd ask. Do you have any more news from the castle? What are the soldiers up to? What is the king doing? I would love to hear more. The only thing I can remember is that the queen is so sad. She hasn't spoken in days. Maybe we should go see her. She has been living here for so long. Maybe she needs some love. What do you think? I
+
+Metrics:
+  - Word Count: 128
+  - Expected Elements: 0/0.0%
+  - D&D Terms: 1
+  - Repetition Score: 0.328
+
+================================================================================
+Category: Dialogue
+Variant: 1
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Player: I try to persuade the guard to let us pass.
+Dungeon Master:
+
+Response:
+He has no reason to let you in. It is a secret place. How are you going to convince him to let you in? I know this place is secret, but I have not been here. I have never been here before. I can't convince him that it is secret. It is not. I can only beg. But he will not. He will not even listen to you. You are not worthy. You are unworthy. You are a mere mortal. You are nothing. You are nothing but a mere mortal. You are nothing. You are nothing. You are nothing. You are nothing. You are nothing. You are nothing. You are nothing. You are nothing. You are nothing. You are nothing. You are nothing
+
+Metrics:
+  - Word Count: 123
+  - Expected Elements: 0/0.0%
+  - D&D Terms: 0
+  - Repetition Score: 0.602
+
+================================================================================
+Category: Dialogue
+Variant: 2
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Player: I try to persuade the guard to let us pass.
+Dungeon Master:
+
+Response:
+If you would, I might get you a job. Do you know the king? I don't. Do you? I could introduce you. I will be happy to pay you with gold. What is it that you do? I am a beggar, and I could use a new suit of armor. It is cold. I will get you the best armor I can find. I know a master of armor. It will make you a great warrior. I have been in this castle for over five years and I am sick of living like a beggar. I would like a job. What is your trade? Do you want a job? I can get you work, but you will have to work hard. You must be a hard worker
+
+Metrics:
+  - Word Count: 127
+  - Expected Elements: 0/0.0%
+  - D&D Terms: 1
+  - Repetition Score: 0.441
+
+================================================================================
+Category: Dialogue
+Variant: 3
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Player: I try to persuade the guard to let us pass.
+Dungeon Master:
+
+Response:
+You know, I think we should go. Maybe there's a place near by that we could hide. I'm tired of being caught. Have you ever seen this kind of place? You may be right. It's really scary in here. I feel like I'm trapped! I hope we can escape! We are probably being watched by that creature. What's that noise? It's getting louder and louder. I don't like it. Can you hide somewhere? I'm scared! There's nothing here that looks edible. I am starving! I wish I could eat something. I can't wait to get out of here. Please, be quiet! I don't want to be noticed! I can't believe we got caught. It was
+
+Metrics:
+  - Word Count: 115
+  - Expected Elements: 0/0.0%
+  - D&D Terms: 0
+  - Repetition Score: 0.322
+
+================================================================================
+Category: Problem Solving
+Variant: 1
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Player: I try to pick the lock on the chest.
+Dungeon Master:
+
+Response:
+He has no idea who you are, and he has no idea what you're doing. It's not like he's the sort of person who would be worried about such things. The chest is locked. You have no idea what is inside. There is no lock on the chest. It's locked, but there's no lock. He's just waiting. He's waiting for you to make a move. As you guys are all like (heavy breathing), you all come to your senses. You realize that you're surrounded, that you're in the middle of this room. As you look around, you can see the two guards that are there are both looking over at you. One of them is like, "Halt. What do you
+
+Metrics:
+  - Word Count: 120
+  - Expected Elements: 1/25.0%
+  - D&D Terms: 0
+  - Repetition Score: 0.350
+
+================================================================================
+Category: Problem Solving
+Variant: 2
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Player: I try to pick the lock on the chest.
+Dungeon Master:
+
+Response:
+You can't, because the lock's set in place. You don't have the tools you would need to get to the lock. But you can try and use your lockpicking to try and get it open. You're going to have to take some damage as you do that. Go for it. Roll an intelligence check. You're going to have to figure out a way to unlock it. If you succeed, you're going to take your lockpicking damage. But you can't use your lockpicking ability to unlock it. So you have to make a dexterity check. The lock is set in place. You have to try and pick it open. So you make a dexterity check to try and pick the lock open. And that's going
+
+Metrics:
+  - Word Count: 124
+  - Expected Elements: 3/75.0%
+  - D&D Terms: 5
+  - Repetition Score: 0.532
+
+================================================================================
+Category: Problem Solving
+Variant: 3
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Player: I try to pick the lock on the chest.
+Dungeon Master:
+
+Response:
+You did, did you? Okay. You have to use a lockpick, unfortunately. Sorry. It was a lockpick. Okay. You manage to pick the lock on the chest. As you pull it open, you look inside. It's a small wooden chest. It's a little weathered and it looks like it has been through a lot of rough times. It's not in pristine condition. It has some slight dings and marks and dents. It's not as fine as you're used to. It looks like it was probably kept on a ship or something for a while. It's a little weathered. But as you open the chest, you see that it's mostly empty. There is a little vial that
+
+Metrics:
+  - Word Count: 116
+  - Expected Elements: 1/25.0%
+  - D&D Terms: 0
+  - Repetition Score: 0.379
+
+================================================================================
+Category: Problem Solving
+Variant: 1
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Player: I attempt to decipher the ancient runes on the wall.
+Dungeon Master:
+
+Response:
+He's not that interested in the runes. "It's hard to see it from this distance." The rest of you all begin to gather your things and prepare to move on. The group that's staying behind, you see there is a small alcove to the side of the main structure. It's a small alcove, but there's a stone that is slightly raised, almost like a small platform. You look around and there is a small altar that has been carved into the stone. There is a small, carved-in, red, glowing, pulsing gem that is in the center. It has this little, faint, magical glow. You can see what looks like a little wisp of smoke coming out of it.
+
+Metrics:
+  - Word Count: 118
+  - Expected Elements: 1/25.0%
+  - D&D Terms: 0
+  - Repetition Score: 0.347
+
+================================================================================
+Category: Problem Solving
+Variant: 2
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Player: I attempt to decipher the ancient runes on the wall.
+Dungeon Master:
+
+Response:
+You can't read these. This is ancient language. It's ancient hieroglyphics. You can't read this. The writing is almost like it's from the time of the creation of the temple itself. You're not even sure when it was made. It could be from the creation of the temple itself, or it could be from the time of the last king who lived here. It's ancient, so you're not even sure. You're trying to look for signs of who was here, and where they were, and what their intentions were. But you're not going to be able to. It's too old, too ancient. You can't decipher it. You're not even sure what the runes mean. You can't
+
+Metrics:
+  - Word Count: 116
+  - Expected Elements: 1/25.0%
+  - D&D Terms: 0
+  - Repetition Score: 0.431
+
+================================================================================
+Category: Problem Solving
+Variant: 3
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Player: I attempt to decipher the ancient runes on the wall.
+Dungeon Master:
+
+Response:
+You know, I think we should go. Maybe there's a place to eat in the forest. It would be nice to get a good rest. I am just not used to being in the forest. The animals are strange. The trees are tall. It is a beautiful place but a little scary at times. I just hope we find a place to stay. Do you know anything of this land? What are we looking for? Why are we here? I am not sure we are searching for anything. I just know we are looking for something. You have a way with words, my friend. I am glad to have you by my side. Please be careful, I do not like the dark. What if we find a place to sleep
+
+Metrics:
+  - Word Count: 130
+  - Expected Elements: 0/0.0%
+  - D&D Terms: 0
+  - Repetition Score: 0.431
+
+================================================================================
+Category: Social
+Variant: 1
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Player: I intimidate the bandit into revealing their hideout location.
+Dungeon Master:
+
+Response:
+He has no business in this house, and I have no business in the prison! I have only come to help you. You will not be taken for a ride, I assure you. Just be honest, tell me everything. Tell me how you have gotten here, how you know what you know, and how you can prove your innocence. Do you have a plan? Do you have a way out? I can only help you if I know everything. I have come to help you escape. I will help you, but you must tell me everything! Now! Tell me! Tell me! Tell me! Tell me! Tell me! Tell me! Tell me! Tell me! Tell me! Tell me! Tell me! Tell me!
+
+Metrics:
+  - Word Count: 121
+  - Expected Elements: 0/0.0%
+  - D&D Terms: 0
+  - Repetition Score: 0.562
+
+================================================================================
+Category: Social
+Variant: 2
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Player: I intimidate the bandit into revealing their hideout location.
+Dungeon Master:
+
+Response:
+If you would, I might be able to help you. I am the king's spy. I travel to all kingdoms and keep an eye out for danger. Perhaps there is a way I can use my skills to help you. I have a secret weapon you are not aware of. I have a way to get information about the hideout location. Would you like me to tell you? It is not that difficult. It takes a lot of patience and strategy. We can go to the king and make a deal. The king will give us a reward for our work. You will have a reward for your work. How do you feel about that? You are a good man. You deserve a reward. You could even go to a great place
+
+Metrics:
+  - Word Count: 132
+  - Expected Elements: 0/0.0%
+  - D&D Terms: 0
+  - Repetition Score: 0.379
+
+================================================================================
+Category: Social
+Variant: 3
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Player: I intimidate the bandit into revealing their hideout location.
+Dungeon Master:
+
+Response:
+You did, I think. Okay. You have advantage on that, so you do succeed. You're bringing them back to where they were. That's going to end your turn. That brings us to the top of the round. That brings us to the top of the round. That brings us to the top of the round. All right. The top of the round, the sky has now cleared. You can see, as you glance down, there's no sign of any of the bandit, or any of the group. The sky is now clear and bright, and the city is now visible. The streets are now illuminated. You can see the street lights are now on. You can see a few street lamps are going on.
+
+Metrics:
+  - Word Count: 124
+  - Expected Elements: 0/0.0%
+  - D&D Terms: 0
+  - Repetition Score: 0.460
+
+================================================================================
+Category: Magic
+Variant: 1
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Player: I cast detect magic to scan the area.
+Dungeon Master:
+
+Response:
+He's right there, but you guys are a little bit further back. So you can see him, but you can't quite make out the details of his form, or his armor. He's about-- it's hard to tell. He's about about-- about 50 or so feet away. You guys are about-- It's hard to tell, it's about about 75 feet back. You guys are about there. You can see him. You can see his form. You can see that he's wearing some sort of armor, but it's not very fine. It's a little rough, but it looks to be a leather, maybe a black leather. You can see bits of black iron. You can see a little bit of the
+
+Metrics:
+  - Word Count: 119
+  - Expected Elements: 0/0.0%
+  - D&D Terms: 0
+  - Repetition Score: 0.504
+
+================================================================================
+Category: Magic
+Variant: 2
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Player: I cast detect magic to scan the area.
+Dungeon Master:
+
+Response:
+You can't see the spell, you can only see the effect of the spell. It would've been a-- I don't know. I'm not really familiar with it. It would have been a magical effect. If you cast it, you can't see the spell. It's like a magical fog. You can see the general area. It's like-- it's not a lot of detail. You would've had to be closer to it to see the fine details. So you're going to go ahead and make a perception check with advantage. That's your bonus. Go ahead and roll a perception check. With advantage, I'd say. So with advantage, plus your dexterity modifier. You're a 25, plus your dexterity modifier
+
+Metrics:
+  - Word Count: 116
+  - Expected Elements: 2/50.0%
+  - D&D Terms: 6
+  - Repetition Score: 0.414
+
+================================================================================
+Category: Magic
+Variant: 3
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Player: I cast detect magic to scan the area.
+Dungeon Master:
+
+Response:
+You did, yeah. You have advantage because you're blind, so you'd be able to. It would take you a little while. You're in the room with her, so you have advantage. You could use your action to do a second one, if you wanted to. So you're at disadvantage. You have advantage, so that's a natural 20. You don't take any damage. She does. She's going to attempt to strike you with her longsword. That is going to be a 13. As you're right there, you have disadvantage on it, so it's going to be a four. That is going to be a two. Go ahead and roll damage. I'll say that you take one point of piercing
+
+Metrics:
+  - Word Count: 118
+  - Expected Elements: 0/0.0%
+  - D&D Terms: 2
+  - Repetition Score: 0.373
+
+================================================================================
+Category: Stealth
+Variant: 1
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Player: I sneak past the sleeping dragon.
+Dungeon Master:
+
+Response:
+He's not that big. I'll get to you. You can get to me if you want to. There's a wall here, so you can't get through there, but you can see him. It's your turn. You can try to make another attack. You can't try to make a saving throw. It's your turn, you're at disadvantage, but you can make another attack. As you begin to make a swing at the dragon, he turns his head back, and you swing and smack it, and you can see the blood now starting to pour from the side of the dragon. It's still breathing, but it looks like it's starting to bleed pretty bad. You can see the dragon's body beginning to look
+
+Metrics:
+  - Word Count: 121
+  - Expected Elements: 1/25.0%
+  - D&D Terms: 2
+  - Repetition Score: 0.413
+
+================================================================================
+Category: Stealth
+Variant: 2
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Player: I sneak past the sleeping dragon.
+Dungeon Master:
+
+Response:
+You can't, because he's not going to move. You can only move where you are. So you can move up against it. So you would be up against it and you would have advantage on it. You'd get a bonus attack against it, and you could move up against it. So that's your action. You still have the other actions you want to do. So you have your spell action. You have your action to move. You have your action to use an ability. You have your action to use your action to cast an ability. You have your action to do anything else. So you have a choice of actions you can do, but you can't do all of them at once. You can only do one.
+
+Metrics:
+  - Word Count: 128
+  - Expected Elements: 0/0.0%
+  - D&D Terms: 3
+  - Repetition Score: 0.539
+
+================================================================================
+Category: Stealth
+Variant: 3
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Player: I sneak past the sleeping dragon.
+Dungeon Master:
+
+Response:
+You take one day off to eat and rest. That's a day off for you. We're going to take a break here. We're going to take a break here. We're going to take a break here. We're going to take a break here. We're going to take a break here. We're going to take a break here. (groans) We're going to take a break here. We're going to take a break here. We're going to take a break here. We're going to take a break here. We're going to take a break here. We're going to take a break here. We're going to take a break here. We're going to take a break here. We're
+
+Metrics:
+  - Word Count: 115
+  - Expected Elements: 0/0.0%
+  - D&D Terms: 0
+  - Repetition Score: 0.843
+
+================================================================================
+Category: Investigation
+Variant: 1
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Player: I investigate the scene of the crime for clues.
+Dungeon Master:
+
+Response:
+He was shot in the back of the head. He is dead. The body is not human. The eyes are yellowish-orange, the skin is red and scaly, and the limbs are long, almost like tentacles. You can see where there is a wound across the back of the head, and you can see a wound on the side of the face, but the head is not visible. It is buried in the dirt. It was buried. He was killed. It was a terrible scene. You can see, at the base of the tree, there is a little box that is partially buried. It has a little bit of dirt around it, but it appears to have been placed there. You can see a little bit of the
+
+Metrics:
+  - Word Count: 127
+  - Expected Elements: 0/0.0%
+  - D&D Terms: 0
+  - Repetition Score: 0.480
+
+================================================================================
+Category: Investigation
+Variant: 2
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Player: I investigate the scene of the crime for clues.
+Dungeon Master:
+
+Response:
+You can't see the room, you can only see through the door. You go ahead and pull the door open. It's an open door. You can see there is an open room, there is a table, a chair, there is a bookcase and a lamp. There is no sign of anybody. You can see there is a table and a chair. There is a bookcase, there is a lamp. You can see the door is open. You can hear, and there is no light source that you can see from the inside, you can hear, but you can't see anything. There is a slight shuffling sound, and you can see a bit of movement, but no movement within the room. There is no sign
+
+Metrics:
+  - Word Count: 124
+  - Expected Elements: 0/0.0%
+  - D&D Terms: 0
+  - Repetition Score: 0.613
+
+================================================================================
+Category: Investigation
+Variant: 3
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Player: I investigate the scene of the crime for clues.
+Dungeon Master:
+
+Response:
+You're going to make a sleight of hand check? Yeah, you can do that. You're going to do a sleight of hand check to try and find some kind of clue that's hidden there. What is your sleight of hand modifier? (counting) You get advantage on this because you're doing sleight of hand. You get to go ahead and make an investigation check as well. So that's going to be a 19 to hit? Rolled a four, so you take six points of damage. Go ahead and roll. Make a constitution saving throw. Roll a constitution save. So four plus two is six. Roll for the actual attack. Roll your first attack. Roll a wisdom saving throw. Roll a wisdom
+
+Metrics:
+  - Word Count: 120
+  - Expected Elements: 3/75.0%
+  - D&D Terms: 9
+  - Repetition Score: 0.433
+
+================================================================================
+Category: Survival
+Variant: 1
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Player: I track the creature through the forest.
+Dungeon Master:
+
+Response:
+He was supposed to be gone by now. I have no idea where he is. I've been searching the forest for hours. I'm exhausted. I need you to make a stealth check. Roll a d20 and add your stealth modifier. It is a natural one plus five. So that's eight. So you roll a d20. What's your DC? You rolled a seven. That's a two. I'm going to go ahead and roll two attacks on you, Caleb. One on the head, one on the shoulder. That's going to be a 16? That hits. Roll damage. It is 17. That hits. Roll damage. That is a 12. That hits. Roll damage. That is a 19. That
+
+Metrics:
+  - Word Count: 115
+  - Expected Elements: 1/25.0%
+  - D&D Terms: 5
+  - Repetition Score: 0.417
+
+================================================================================
+Category: Survival
+Variant: 2
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Player: I track the creature through the forest.
+Dungeon Master:
+
+Response:
+You can't see the creature, you can only track it, you can't see it. You can only see its shadow. As you're moving through the forest, you feel the presence of the creature and you start to see tracks, and you can see the shadow of the creature. You're about to get a good look at it when the other one appears. You see this strange creature, this blob of black slime, this liquid-like blob that suddenly emerges from the forest and it looks like it's moving towards you. You hear this (whoosh) as it passes right in front of you. You turn and look and see this strange creature, this large, grotesque, humanoid creature that's almost like a cross between a dragon and
+
+Metrics:
+  - Word Count: 124
+  - Expected Elements: 1/25.0%
+  - D&D Terms: 0
+  - Repetition Score: 0.444
+
+================================================================================
+Category: Survival
+Variant: 3
+--------------------------------------------------------------------------------
+Prompt:
+You are a Dungeon Master in a fantasy RPG game.
+
+Player: I track the creature through the forest.
+Dungeon Master:
+
+Response:
+You track it, yes. It's hard to tell where it is. There are a lot of trees. It's a small forest. You follow it through the forest, eventually coming across the outside of the castle. The outside of the castle, the actual gates are closed. The door is locked. The guards are locked inside, but you can see the castle walls. You can see the interior of the castle itself. There is no way to gain entry. The doors are locked, and there are no guards to let you in. The guards that are on the inside have been instructed to hold it for a certain period of time, but no longer. You can see a number of guards that are patrolling the exterior of the castle. You also
+
+Metrics:
+  - Word Count: 129
+  - Expected Elements: 1/25.0%
+  - D&D Terms: 2
+  - Repetition Score: 0.457
+

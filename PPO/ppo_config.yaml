@@ -6,19 +6,18 @@ run_name: "ppo-run-{date}"
 
 # Model paths
 model_paths:
-  policy_model_path: "models/director-sft-baseline_interim"
-  narrative_critic_path: "models/narrative_critic_finetuned"
-  causal_critic_path: "models/causal_critic_finetuned"
-  player_generator_path: "models/player_generator"
-  player_classifier_path: "models/player_classifier"
+  base_model: "microsoft/phi-2"
+  adapter_path: "/home/divya/Desktop/Ekansh/Dropout-Squad/DM-SFT/models/sft_phi2_improved"
+  world_critic_path: "/home/divya/Desktop/Ekansh/Dropout-Squad/model_worldconsistency2"
+  causal_critic_path: "/home/divya/Desktop/Ekansh/Dropout-Squad/model_causalcritic_3class"
 
-# PPO hyperparameters
+# PPO hyperparameters (OPTIMIZED FOR RTX 4080 SUPER 16GB)
 ppo_hyperparameters:
   learning_rate: 1.41e-6
-  batch_size: 16 # Interactions to collect
-  mini_batch_size: 4 # Update batch size
-  gradient_accumulation_steps: 1
-  ppo_epochs: 4
+  batch_size: 32 # Increased from 4 - proper PPO batch size
+  mini_batch_size: 8 # Mini-batches for gradient updates
+  gradient_accumulation_steps: 2 # Maintain memory efficiency
+  ppo_epochs: 2 # Reduced from 4 to save time (still proper PPO)
 
   # KL divergence control
   adap_kl_ctrl: true
@@ -31,10 +30,10 @@ ppo_hyperparameters:
   cliprange: 0.2
   vf_coef: 0.1
 
-# Training configuration
+# Training configuration (OPTIMIZED FOR 3-4 HOUR RUN)
 training_settings:
   output_dir: "models/director_ppo_final"
-  total_ppo_steps: 1000
+  total_ppo_steps: 3500 # ~3 hours (3500 * 3.13s / 3600 = 3.0 hours)
   seed: 42
 
   # Dynamic vs static reward weighting
@@ -81,3 +80,12 @@ generation_settings:
   top_k: 50
   top_p: 0.95
   temperature: 0.75
+
+# Training settings
+training_settings:
+  batch_size: 32  # Prompts per training step
+  output_dir: "PPO/outputs"
+  save_best_only: true
+  logging_steps: 10
+  eval_steps: 50
+  max_grad_norm: 0.5
