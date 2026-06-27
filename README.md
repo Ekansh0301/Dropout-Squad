@@ -1,562 +1,375 @@
-# Director LLM: Multi-Critic Reinforcement Learning for D&D Narrative Generation
+<div align="center">
 
-**Dropout Squad** - Advanced NLP project implementing Multi-Critic Reinforcement Learning (MCRL) for domain-aware Dungeon Master response generation in tabletop RPG scenarios.
+# 🎲 The Director LLM
+### A Multi-Critic Reinforcement Learning Framework for Domain-Aware Narrative Generation
 
-## Project Overview
+**Dropout Squad** · International Institute of Information Technology, Hyderabad
 
-This project implements a multi-component system for generating contextually appropriate and narratively engaging Dungeon Master responses in D&D scenarios. The approach combines supervised fine-tuning with multi-critic reinforcement learning, utilizing dynamic reward weighting based on player intent classification.
+[![Python](https://img.shields.io/badge/Python-3.8%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.0%2B-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)](https://pytorch.org/)
+[![Transformers](https://img.shields.io/badge/🤗%20Transformers-PEFT%20%7C%20TRL-FFD21E?style=for-the-badge)](https://huggingface.co/)
+[![MIT License](https://img.shields.io/badge/License-MIT-22C55E?style=for-the-badge)](./LICENSE)
+[![Status](https://img.shields.io/badge/Status-Research%20Complete-10B981?style=for-the-badge)](.)
 
-### System Architecture
+[**📄 Read the Paper**](./Dropout_Squad.pdf) &nbsp;·&nbsp; [Results](#-results) &nbsp;·&nbsp; [Architecture](#-architecture) &nbsp;·&nbsp; [Quick Start](#-quick-start) &nbsp;·&nbsp; [Module Docs](#-repository-structure) &nbsp;·&nbsp; [Citation](#-citation)
 
-The Director LLM system consists of several interconnected components:
+</div>
 
-1. **Supervised Fine-Tuning (SFT) Baseline**: Phi-2 (2.7B) model fine-tuned with LoRA on CRD3 D&D transcripts
-2. **Multi-Critic System**:
-   - **Narrative Critic**: DeBERTa-v3-base regression for quality assessment (40,906 training examples)
-   - **Causal Critic**: RoBERTa-base 3-class NLI model for logical consistency (88.09% accuracy, 382K examples)
-   - **World Consistency Critic**: RoBERTa-large for D&D rules validation (98.3% accuracy)
-   - **Character Voice Critic**: DeBERTa-v3-base with learned embeddings for NPC consistency (87.6% accuracy)
-3. **Hybrid Player Simulation**:
-   - Intent Classifier: BERT-based model for categorizing player actions (EXPLORE/ACTION/DIALOGUE)
-4. **PPO Training**: Multi-critic reinforcement learning with dynamic reward weighting
-5. **Evaluation Pipeline**: Comprehensive assessment and analysis tools
+---
 
-### Key Features
+## Overview
 
-- **Dynamic Reward Weighting**: Adjusts critic importance based on player intent
-- **Memory-Efficient Training**: LoRA adapters enable training on consumer GPUs (RTX 4080 Super 16GB)
-- **Modular Design**: Each component can be trained and evaluated independently
-- **Comprehensive Evaluation**: Statistical analysis and domain-specific metrics
-- **Research-Grade Implementation**: Reproducible experiments with detailed configuration
-- **Production-Ready Models**: All critics trained and validated with high accuracy
+Supervised fine-tuning teaches a language model to imitate one style under one implicit objective. Interactive narrative generation needs more than that. A Dungeon Master has to be vivid and precise, atmospheric and logically consistent, improvisational and faithful to events already established in the story. These objectives pull in different directions, and a model optimized for one tends to fail quietly at the others.
 
-### Dynamic Reward Weighting System
+**The Director LLM** solves this with Multi-Critic Reinforcement Learning (MCRL). It splits "good DM response" into four specialized, independently trained, independently measurable competencies: narrative quality, causal consistency, world coherence, and character voice. It then learns when each one should dominate through intent-conditioned dynamic reward weighting. A response to *"I cast Fireball at the goblins"* should be judged mostly on causal precision. A response to *"I ask the bartender about the rumors"* should be judged mostly on character voice. A single reward model cannot represent that distinction. Four critics and a learned weighting function can.
 
-The core innovation of the Director LLM is intent-aware reward weighting:
+The system trains end to end with PPO on over 310,000 examples combining professional D&D transcripts ([CRD3](https://github.com/RevanthRameshkumar/CRD3)) and crowdsourced fantasy dialogue ([LIGHT](https://github.com/facebookresearch/ParlAI)). It takes a supervised baseline to a context-aware policy that improves on every quality dimension at once, with no trade-off between them.
 
-**Player Intent Classification**:
+---
 
-- **EXPLORE**: Investigation, movement, environmental interaction
-- **ACTION**: Combat, physical actions, skill usage
-- **DIALOGUE**: Conversation, social interaction, roleplay
+## 📈 Results
 
-**Adaptive Reward Weights**:
+Supervised fine-tuning alone was not enough. 57% of SFT baseline outputs fell below the narrative quality threshold, and mean causal consistency sat at just 0.189 despite 310K training examples. Multi-critic PPO training closed that gap substantially.
+
+<div align="center">
+
+| Metric | SFT Baseline | MCRL (PPO) | Improvement |
+|---|:---:|:---:|:---:|
+| **Mean Reward** | 0.412 | 0.611 | **+48.3%** |
+| Narrative Quality | 0.523 | 0.694 | +32.7% |
+| **Causal Consistency** | 0.189 | 0.567 | **+200.0%** |
+| World Consistency | 0.618 | 0.821 | +32.8% |
+| **Character Voice** | 0.138 | 0.268 | **+94.2%** |
+
+</div>
+
+Every dimension improved at once. Multi-objective optimization sidestepped the zero-sum trade-offs a single reward model would have forced. The core hypothesis held up empirically too: **dynamic, intent-conditioned weighting beat uniform static weighting by +15.7%** on mean reward. Exploration prompts saw the largest narrative gains, combat prompts the largest causal gains, and dialogue prompts the largest character-voice gains. Each critic matters most precisely where it should.
+
+<details>
+<summary><b>Before and after examples</b></summary>
+<br>
+
+**Causal consistency (Action context).** Player: *"I cast Fireball at the goblin horde."*
+- SFT baseline ignored the action, describing generic tavern chaos (causal score: 0.09)
+- PPO-trained model: *"Your Fireball streaks toward the horde... two goblins are incinerated instantly..."* (causal score: 0.94)
+
+**Narrative richness (Explore context).** Player examines an ancient door.
+- SFT baseline: *"It is made of stone."* (narrative score: 0.27)
+- PPO-trained model: *"...a masterwork of ancient dwarven craftsmanship... intricate runes glowing faintly..."* (narrative score: 0.91)
+
+**Character voice (Dialogue context).** Player asks the innkeeper about a stranger.
+- SFT baseline: generic, no personality (character score: 0.08)
+- PPO-trained model: distinct dialect and voice, *"'Aye, that one,' she whispers in a thick northern accent..."* (character score: 0.81)
+
+</details>
+
+---
+
+## 🏗 Architecture
+
+The system runs in three layers: a **Generation Layer** that produces a response conditioned on a classified player intent, an **Evaluation Layer** of four specialized critics scoring every response in parallel, and an **Optimization Layer** that turns those four scores into a single intent-weighted reward for PPO.
+
+```mermaid
+flowchart TB
+    subgraph GEN[" Generation Layer "]
+        direction LR
+        HP["Hybrid Player<br/>(Generator + Intent Classifier)"]
+        DA["Director Agent<br/>Phi-2 (2.7B) + QLoRA"]
+        HP -- "prompt, intent I" --> DA
+    end
+
+    subgraph EVAL[" Evaluation Layer "]
+        direction LR
+        NC["Narrative Critic<br/>DeBERTa-v3-base"]
+        CC["Causal Critic<br/>RoBERTa-base (3-class NLI)"]
+        WC["World Consistency Critic<br/>DeBERTa-v3-small + Flan-T5"]
+        VC["Character Voice Critic<br/>DeBERTa-v3-base"]
+    end
+
+    subgraph OPT[" Optimization Layer "]
+        direction LR
+        DW["Dynamic Weighting<br/>W(I)"]
+        PPO["PPO Optimizer<br/>(clipped surrogate + KL penalty)"]
+    end
+
+    DA -- "generated response y" --> NC
+    DA -- "generated response y" --> CC
+    DA -- "generated response y" --> WC
+    DA -- "generated response y" --> VC
+
+    NC --> DW
+    CC --> DW
+    WC --> DW
+    VC --> DW
+
+    DW -- "R = W(I) · [r_narr, r_caus, r_world, r_char]" --> PPO
+    PPO -- "policy gradient ∇θ" --> DA
+```
+
+**The central design choice is that critic weights are not fixed.** They shift based on what the player is trying to do:
 
 ```python
 intent_weights = {
-    "EXPLORE": {"narrative": 0.40, "causal": 0.20, "world": 0.30, "character": 0.10},
-    "ACTION":  {"narrative": 0.20, "causal": 0.40, "world": 0.30, "character": 0.10},
-    "DIALOGUE": {"narrative": 0.20, "causal": 0.20, "world": 0.20, "character": 0.40}
+    "EXPLORE":  {"narrative": 0.40, "causal": 0.20, "world": 0.30, "character": 0.10},
+    "ACTION":   {"narrative": 0.20, "causal": 0.40, "world": 0.30, "character": 0.10},
+    "DIALOGUE": {"narrative": 0.20, "causal": 0.20, "world": 0.20, "character": 0.40},
 }
 ```
 
-**Benefits**:
+This is what lets a single policy give an atmospheric, loosely constrained answer to "I search the ruins" and a mechanically precise, tightly constrained answer to "I attack with my sword," without training separate models for each context.
 
-- Context-appropriate response optimization
-- Reduces reward signal conflicts between critics
-- Enables domain-specific behavior adaptation
+### Core components
 
-## Technical Stack
+| Component | Model | Size | Validated Performance | Training Data |
+|---|---|:---:|---|:---:|
+| **Director Agent** (policy) | Phi-2 + QLoRA | 2.7B (7.8M trainable, 0.28%) | n/a | 310K (CRD3 + LIGHT) |
+| **Narrative Critic** | DeBERTa-v3-base (regression) | 184M | Pearson r = 0.938 | 40,906 |
+| **Causal Critic** | RoBERTa-base (3-class NLI) | 125M | 88.09% acc, macro F1 88.15% | 382,530 |
+| **World Consistency Critic** | DeBERTa-v3-small classifier + Flan-T5-large extractor | 86M + 780M | 98.39% acc across 4 violation classes | 38,436 |
+| **Character Voice Critic** | DeBERTa-v3-base + learned NPC embeddings | 184M | 87.6% acc (P 88.2 / R 86.4 / F1 87.3) | 15,642 |
+| **Hybrid Player** (generator) | DistilGPT-2 | 82M | n/a | 519,597 player utterances |
+| **Hybrid Player** (classifier) | DistilBERT-base (3-way intent) | 66M | Confidence: Explore 0.87, Action 0.91, Dialogue 0.84 | CRD3 + LIGHT |
 
-- **Base Language Model**: Phi-2 (2.7B parameters) with LoRA adapters (r=32, α=64)
-- **Critic Models**:
-  - Narrative: DeBERTa-v3-base (regression)
-  - Causal: RoBERTa-base (3-class NLI, 88.09% accuracy)
-  - World: RoBERTa-large (98.3% accuracy)
-  - Character: DeBERTa-v3-base with embeddings (87.6% accuracy)
-- **Player Simulation**: BERT-based intent classifier
-- **Training Framework**: PyTorch, Transformers, TRL, PEFT
-- **Optimization**: LoRA adapters, mixed precision training, gradient checkpointing
+*Full per-class metrics, configs, and architecture notes for each component live in that module's own README. See [Repository Structure](#-repository-structure) below.*
 
-## Project Structure
+---
 
-```
-Dropout-Squad/
-├── README.md                    # Project overview and setup guide
-├── DM-SFT/                     # Supervised Fine-Tuning (Phi-2)
-│   ├── train_sft_phi2_optimized.py  # Main SFT training script
-│   ├── sft_config.yaml         # Training configuration
-│   ├── evaluate_sft_model.py   # Model evaluation
-│   └── models/                 # Trained model artifacts
-├── PPO/                        # Multi-Critic Reinforcement Learning
-│   ├── train_complete_ppo.py   # Production PPO training script
-│   ├── ppo_training_complete.py # Complete PPO implementation
-│   ├── integrated_critics.py   # Multi-critic reward system
-│   └── ppo_config.yaml         # PPO training configuration
-├── causal critic/              # Causal Consistency (3-class NLI)
-│   ├── causal_critic.py        # RoBERTa-based causal evaluator
-│   ├── train_3class.py         # 3-class critic training (production)
-│   ├── data_prep_3class.py     # Data preparation
-│   └── test_causal_accuracy.py # Model validation
-├── narrative critic/           # Narrative Quality Assessment
-│   ├── narrative_critic.py     # DeBERTa-based quality scoring
-│   ├── critic_config.yaml      # Training configuration
-│   └── model/                  # Trained model artifacts
-├── world_consistency critic/   # World/Rules Consistency
-│   ├── README.md              # 98.3% accuracy documentation
-│   └── [implementation files]
-├── character-voice critic/     # Character Voice Consistency
-│   ├── README.md              # 87.6% accuracy documentation
-│   └── [implementation files]
-├── hybrid_player/              # Player Intent Classification
-│   ├── models.py              # BERT-based intent classifier
-│   ├── train_hybrid_player.py # Training script
-│   └── models/                # Trained models
-└── Evaluation/                # Comprehensive Evaluation
-    ├── full_eval.py           # Complete evaluation pipeline
-    └── eval_config.yaml       # Evaluation configuration
-```
-
-## Module Descriptions
-
-### DM-SFT (Supervised Fine-Tuning)
-
-**Purpose**: Creates baseline Dungeon Master model using supervised learning on Phi-2
-
-- `train_sft_phi2_optimized.py`: Main training script with LoRA optimization for Phi-2 (2.7B)
-- `sft_config.yaml`: Configuration for training parameters and optimization settings
-- `evaluate_sft_model.py`: Comprehensive model evaluation
-- `models/`: Directory containing trained model artifacts (75K training examples, 1 epoch)
-
-**Implementation Details**:
-
-- **Base Model**: microsoft/phi-2 (2.7B parameters)
-- **Training Method**: Parameter-Efficient Fine-Tuning (PEFT) using LoRA
-- **LoRA Configuration**:
-  - Rank (r): 32
-  - Alpha: 64
-  - Target modules: All linear layers in transformer
-  - Dropout: 0.05
-- **Training Data**: 75,000 CRD3 dialogue turns (Player action → DM response pairs)
-- **Training Time**: ~3.87 hours on RTX 4080 Super (16GB)
-- **Loss**: Train: 1.987, Eval: 1.660
-- **Response Quality**: 122-word average, coherent narrative structure
-- **Prompt Format**: Phi-2 specific format (not Llama-2 style)
-
-  ```
-  You are a Dungeon Master in a fantasy RPG game.
-
-  Player: {player_action}
-  Dungeon Master: {dm_response}
-  ```
-
-**Key Improvements Over Base Model**:
-
-- D&D-specific vocabulary and terminology
-- Proper game mechanics understanding (dice rolls, abilities, spells)
-- Narrative coherence and descriptive quality
-- Context-aware responses to player actions
-
-### PPO (Proximal Policy Optimization)
-
-**Purpose**: Multi-critic reinforcement learning with dynamic reward weighting
-
-- `train_complete_ppo.py`: Production PPO training script (1771 lines, full integration)
-- `ppo_training_complete.py`: Complete PPO implementation with all 4 critics
-- `integrated_critics.py`: Multi-critic reward system implementation
-- `ppo_config.yaml`: Configuration for PPO hyperparameters and dynamic weighting
-
-**Implementation Details**:
-
-- **Algorithm**: Proximal Policy Optimization (PPO) with clipping
-- **Policy Network**: Phi-2 + LoRA adapter (initialized from SFT model)
-- **Value Network**: Integrated value head for advantage estimation
-- **Training Configuration**:
-  - Batch size: 32
-  - Mini-batch size: 8
-  - PPO epochs: 4
-  - Learning rate: 1e-5
-  - Clip range: 0.2
-  - GAE lambda: 0.95
-  - Total steps: 1,000 (converged)
-  - Training time: ~53 minutes on RTX 4080 Super
-
-**Multi-Critic Reward System**:
-
-- **Four Specialized Critics**:
-
-  1. **Narrative Quality** (DeBERTa-v3): Scores descriptiveness, atmosphere, engagement
-  2. **Causal Consistency** (RoBERTa): Validates logical action-response relationships
-  3. **World Consistency** (RoBERTa-large): Checks D&D rules and physics adherence
-  4. **Character Voice** (DeBERTa-v3): Ensures NPC personality consistency
-
-- **Dynamic Weighting by Intent**:
-
-  - **EXPLORE**: Narrative-focused (N:0.40, C:0.20, W:0.30, Ch:0.10)
-  - **ACTION**: Causal-focused (N:0.20, C:0.40, W:0.30, Ch:0.10)
-  - **DIALOGUE**: Character-focused (N:0.20, C:0.20, W:0.20, Ch:0.40)
-
-- **Reward Calculation**:
-  ```python
-  reward = (narrative_score * weight_n +
-            causal_score * weight_c +
-            world_score * weight_w +
-            character_score * weight_ch)
-  ```
-
-**Training Results**:
-
-- **Overall Performance**: 0.412 → 0.611 mean reward (+48.3%)
-- **Causal Consistency**: 0.189 → 0.567 (+200% improvement)
-- **Narrative Quality**: 0.523 → 0.694 (+32.7%)
-- **World Consistency**: 0.618 → 0.821 (+32.8%)
-- **Character Voice**: 0.138 → 0.268 (+94.2%)
-
-**Key Features**:
-
-- Checkpoint/resume capability for interrupted training
-- Gradient accumulation for memory efficiency
-- Real-time logging with wandb integration
-- Validation every 50 steps
-- Example generation for qualitative assessment
-- No reward hacking or mode collapse observed
-
-**Performance**: Mean reward improvement from 0.412 (SFT baseline) to 0.611 (PPO trained)
-
-### causal critic
-
-**Purpose**: Evaluates causal consistency between player actions and DM responses using 3-class NLI
-
-- `causal_critic.py`: RoBERTa-base causal consistency evaluator
-- `train_3class.py`: Production training script for 3-class model (entailment/neutral/contradiction)
-- `data_prep_3class.py`: Extracts and preprocesses data from CRD3 dataset
-- `test_causal_accuracy.py`: Model validation and accuracy testing
-
-**Implementation Details**:
-
-- **Model Architecture**: RoBERTa-base (125M parameters)
-- **Task**: 3-class Natural Language Inference
-  - **Entailment**: Response logically follows from player action
-  - **Neutral**: Response is possible but not necessarily implied
-  - **Contradiction**: Response conflicts with player action
-- **Training Data**: 382,530 examples
-  - Positive pairs: Sequential player-DM turns from CRD3
-  - Negative pairs: Mismatched player actions and DM responses
-  - Balanced across all 3 classes
-- **Training Configuration**:
-  - Learning rate: 2e-5
-  - Batch size: 16
-  - Epochs: 3
-  - Max sequence length: 512 tokens
-  - Training time: ~2-3 hours
-- **Input Format**:
-  ```
-  [CLS] Player: {action} [SEP] DM: {response} [SEP]
-  ```
-
-**Performance Metrics**:
-
-- **Overall Accuracy**: 88.09%
-- **Per-Class Performance**:
-  - Entailment: 89.2% F1
-  - Neutral: 85.7% F1
-  - Contradiction: 89.4% F1
-- **Model Size**: 476MB
-
-**Performance**: 88.09% accuracy on 382,530 training examples
-
-### narrative critic
-
-**Purpose**: Assesses narrative quality of generated DM responses
-
-- `narrative_critic.py`: DeBERTa-v3-base regression model for quality scoring
-- `critic_config.yaml`: Configuration for critic training parameters
-- `model/`: Trained model artifacts
-
-**Implementation Details**:
-
-- **Model Architecture**: DeBERTa-v3-base (184M parameters)
-- **Task**: Regression (quality score prediction, 0.0 to 1.0)
-- **Training Data**: 40,906 quality-labeled examples
-  - 30,000 from ROCStories corpus
-  - 10,906 from human-annotated DM responses
-- **Quality Dimensions Evaluated**:
-  - **Descriptiveness**: Sensory details, vivid imagery, atmospheric elements
-  - **Engagement**: Narrative hooks, dramatic tension, player agency
-  - **Coherence**: Logical flow, consistent world-building, clear communication
-  - **Structure**: Proper pacing, response length appropriateness
-- **Training Configuration**:
-  - Learning rate: 2e-5
-  - Batch size: 8
-  - Epochs: 5
-  - Loss function: MSE (Mean Squared Error)
-  - Training time: ~4-5 hours
-- **Output**: Continuous score between 0.0 (poor quality) and 1.0 (excellent quality)
-
-**Scoring Rubric**:
-
-- **0.0-0.3**: Poor (generic, minimal detail, unclear)
-- **0.3-0.6**: Moderate (adequate but lacking engagement)
-- **0.6-0.8**: Good (descriptive, engaging, coherent)
-- **0.8-1.0**: Excellent (vivid, immersive, professionally crafted)
-
-**Training Data**: 40,906 quality-labeled examples
-
-### world_consistency critic
-
-**Purpose**: Validates adherence to D&D 5e rules, game mechanics, and physical consistency
-
-**Implementation Details**:
-
-- **Model Architecture**: RoBERTa-large (355M parameters)
-- **Task**: Binary classification (consistent vs. inconsistent)
-- **Validation Accuracy**: 98.3%
-- **Knowledge Base**:
-  - D&D 5e System Reference Document (SRD)
-  - Player's Handbook rules and mechanics
-  - Spell descriptions and effects
-  - Character abilities and resource limitations
-  - Physics and world logic constraints
-- **Consistency Types Checked**:
-  1. **Rule Violations**: Incorrect spell usage, ability mechanics, dice rolls
-  2. **Resource Tracking**: Spell slots, hit points, ability uses
-  3. **Physics Consistency**: Impossible actions, contradictory states
-  4. **Lore Adherence**: World-building consistency, established facts
-- **Input Format**: Context + DM response → Consistency score
-
-**Key Features**:
-
-- Hybrid architecture (symbolic + neural)
-- Explicit world state tracking
-- Detects contradictions, hallucinations, and amnesia
-- Provides interpretable error explanations
-
-### character-voice critic
-
-**Purpose**: Ensures NPC personality and dialogue consistency across interactions
-
-**Implementation Details**:
-
-- **Model Architecture**: DeBERTa-v3-base with learned character embeddings
-- **Task**: Character voice matching (regression scoring)
-- **Validation Accuracy**: 87.6%
-- **Training Approach**:
-  - Learns 128-dimensional embeddings per character
-  - Captures personality traits, speech patterns, vocabulary preferences
-  - Trained on Critical Role character dialogues (professional voice actors)
-- **Evaluation Dimensions**:
-  - **Personality Consistency**: Brave/cowardly, formal/casual, optimistic/cynical
-  - **Speech Patterns**: Vocabulary choice, sentence structure, verbal tics
-  - **Behavioral Traits**: Character-specific quirks and mannerisms
-  - **Emotional Tone**: Consistent emotional expression
-- **Scoring**:
-  - 0.0-0.3: Poor match (out of character)
-  - 0.3-0.6: Moderate (generic dialogue)
-  - 0.6-0.8: Good (captures essence)
-  - 0.8-1.0: Excellent (authentic voice)
-
-**Key Innovation**: Character-specific embeddings enable distinguishing subtle differences between similar character types (e.g., different warrior personalities)
-
-### hybrid_player
-
-**Purpose**: Provides player intent classification for dynamic reward weighting in PPO training
-
-- `models.py`: BERT-based intent classifier for EXPLORE/ACTION/DIALOGUE categorization
-- `train_hybrid_player.py`: Training script for intent classification
-- `models/`: Trained classifier models
-
-**Key Feature**: Enables context-aware critic weighting based on player action type
-
-### Evaluation
-
-**Purpose**: Comprehensive evaluation pipeline with advanced metrics
-
-- `full_eval.py`: Complete evaluation system with statistical analysis and visualization
-- `evalc.py`: Basic critic evaluation utilities
-- `eval_config.yaml`: Configuration for evaluation parameters and model paths
-
-## Technical Stack
-
-- **Base Model**: Phi-2 (2.7B) with LoRA adapters (r=32, α=64)
-- **Critics**:
-  - Narrative: DeBERTa-v3-base (regression)
-  - Causal: RoBERTa-base (3-class, 88.09% accuracy)
-  - World: RoBERTa-large (98.3% accuracy)
-  - Character: DeBERTa-v3-base (87.6% accuracy)
-- **Player Simulation**: BERT-based intent classifier
-- **Training**: PyTorch, Transformers, TRL, PEFT
-- **Optimization**: LoRA adapters, mixed precision, gradient checkpointing
-
-## Datasets
-
-The project utilizes multiple datasets for comprehensive training:
-
-### Dataset Download
-
-🔗 **[Dataset](https://1drv.ms/f/c/bdcf3b74ef9b6129/Ep8Im9Kl-SNOspd2NAYqJ4MBzBsoeKe3uRlr6IhZiDkyGg?e=hrZgDd)**
-🔗 **[Model](https://iiithydresearch-my.sharepoint.com/my?id=%2Fpersonal%2Faman%5Fsrivastava%5Fresearch%5Fiiit%5Fac%5Fin%2FDocuments%2FANLPProjectModels&viewid=645125c6%2Dfd29%2D494e%2D9af6%2Ddc9d91243e02&source=waffle)**
-
-### Primary Datasets
-
-- **CRD3**: Critical Role D&D transcripts (~200 episodes, 2 campaigns)
-- **LIGHT**: Fantasy dialogue and action data (~20K training samples)
-- **ROCStories/TinyStories**: Narrative coherence training (~1.9GB stories)
-
-### Processed Training Data
-
-- **DM-SFT Dataset**: 75,000 examples (CRD3 D&D transcripts)
-- **Critic Training**: 40,906 examples (30K ROCStories + 10.9K DM pairs)
-- **Causal Critic Training**: 382,530 premise-hypothesis pairs (3-class NLI)
-- **World Consistency**: D&D 5e rules corpus and validation dataset
-- **Character Voice**: Critical Role character dialogue with embeddings
-
-### Dataset Usage by Component
-
-- **DM-SFT**: Data Splits (instruction-tuned LIGHT+CRD3 combination)
-- **Narrative Critic**: Critic Training dataset with quality labels
-- **Causal Critic**: Causal critic training data for consistency evaluation
-- **Hybrid Player**: LIGHT dialogue data for player simulation
-- **PPO Training**: All datasets integrated with critic feedback
-
-_See `Data/README.md` for detailed dataset documentation and setup instructions._
-
-## Getting Started
+## 🚀 Quick Start
 
 ### Prerequisites
-
 - Python 3.8+
-- CUDA-capable GPU (16GB+ VRAM recommended)
+- CUDA-capable GPU, 16GB+ VRAM recommended (developed on an RTX 4080 Super)
 - PyTorch 2.0+
 
-### Environment Setup
+### Installation
 
 ```bash
-# Install core dependencies
-pip install torch transformers peft trl datasets
-pip install accelerate bitsandbytes wandb
-
-# Install additional requirements
-pip install PyYAML numpy pandas scikit-learn
-pip install sentencepiece protobuf
+git clone https://github.com/Ekansh0301/Dropout-Squad.git
+cd Dropout-Squad
+pip install -r requirements.txt
 ```
 
-### Quick Start Training
-
-1. **Train SFT Baseline (Phi-2)**
-
-   ```bash
-   cd DM-SFT/
-   python train_sft_phi2_optimized.py --config sft_config.yaml
-   ```
-
-2. **Train Critics** (if not using pre-trained)
-
-   ```bash
-   # Causal Critic
-   cd "causal critic/"
-   python train_3class.py
-
-   # Narrative Critic
-   cd ../narrative\ critic/
-   python narrative_critic.py --train
-   ```
-
-3. **Run PPO Training**
-   ```bash
-   cd PPO/
-   python train_complete_ppo.py \
-     --steps 1000 \
-     --batch-size 32 \
-     --val-interval 50 \
-     --output-dir checkpoints/
-   ```
-
-### Model Inference
+### Inference
 
 ```python
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from peft import PeftModel
 
-# Load base model
-model = AutoModelForCausalLM.from_pretrained("microsoft/phi-2")
+base = AutoModelForCausalLM.from_pretrained("microsoft/phi-2")
 tokenizer = AutoTokenizer.from_pretrained("microsoft/phi-2")
+model = PeftModel.from_pretrained(base, "path/to/ppo-trained-adapter")
 
-# Load LoRA adapter
-model = PeftModel.from_pretrained(model, "DM-SFT/models/sft_phi2_improved")
-
-# Generate DM response
 prompt = "Player: I examine the ancient door.\nDungeon Master:"
 inputs = tokenizer(prompt, return_tensors="pt")
-outputs = model.generate(**inputs, max_length=200)
-response = tokenizer.decode(outputs[0], skip_special_tokens=True)
+output = model.generate(**inputs, max_new_tokens=200)
+print(tokenizer.decode(output[0], skip_special_tokens=True))
 ```
 
-## Training Details
+### Training pipeline
 
-### Hardware Requirements
+```bash
+# 1. Supervised baseline (Phi-2 + QLoRA)
+cd DM-SFT/
+python train_sft_phi2.py --config sft_config.yaml
 
-- **GPU**: NVIDIA RTX 4080 Super (16GB VRAM) or equivalent
-- **RAM**: 32GB+ system memory recommended
-- **Storage**: ~50GB for models and datasets
+# 2. Train the critics (skip if using the provided checkpoints)
+cd "../causal critic/"      && python train_3class.py
+cd "../narrative critic/"   && python narrative_critic.py
+cd "../hybrid_player/"      && python train_hybrid_player.py
+# World Consistency and Character Voice critics: see their respective notebooks
 
-### Training Times (on RTX 4080 Super)
+# 3. Multi-Critic RL (PPO), the main event
+cd ../PPO/
+python train_complete_ppo.py --config ppo_config.yaml
+```
 
-- **SFT Training**: ~3.87 hours (1 epoch, 75K examples)
-- **Causal Critic**: ~2-3 hours (382K examples)
-- **PPO Training**: ~53 minutes (1000 steps, batch size 32)
-- **Narrative Critic**: ~4-5 hours (40.9K examples)
-
-### Hyperparameters
-
-**SFT (Phi-2)**:
-
-- Learning rate: 2e-4
-- LoRA rank (r): 32
-- LoRA alpha: 64
-- Batch size: 4 (gradient accumulation: 4)
-- Max length: 512 tokens
-
-**PPO**:
-
-- Learning rate: 1e-5
-- Batch size: 32
-- PPO epochs: 4
-- Clip range: 0.2
-- Value function coefficient: 0.1
-
-**Causal Critic**:
-
-- Model: RoBERTa-base
-- Learning rate: 2e-5
-- Batch size: 16
-- Training examples: 382,530 (3-class balanced)
-
-## Key Features
-
-- **Memory Efficient**: LoRA adapters enable training on consumer GPUs (16GB VRAM)
-- **Modular Design**: Each component can be trained and evaluated independently
-- **Comprehensive Evaluation**: Statistical analysis, visualization, and domain-specific metrics
-- **Intent-Aware**: Dynamic reward weighting based on player action classification
-- **Research-Grade**: Reproducible experiments with detailed configuration management
-- **Production-Ready**: All critics validated with >85% accuracy
-
-## Performance Summary
-
-### Model Accuracies
-
-| Component         | Model         | Accuracy   | Training Examples   |
-| ----------------- | ------------- | ---------- | ------------------- |
-| Causal Critic     | RoBERTa-base  | 88.09%     | 382,530             |
-| World Consistency | RoBERTa-large | 98.3%      | D&D rules corpus    |
-| Character Voice   | DeBERTa-v3    | 87.6%      | Character dialogues |
-| Narrative Quality | DeBERTa-v3    | Regression | 40,906              |
-
-### PPO Training Results
-
-- **SFT Baseline**: Mean reward 0.412
-- **PPO Trained**: Mean reward 0.611 (+48.3% improvement)
-- **Causal Consistency**: 0.189 → 0.567 (+200% improvement)
-- **Training Steps**: 1,000 steps (converged, no overfitting)
-
-## Configuration
-
-Each module includes detailed YAML configuration files for:
-
-- Model hyperparameters
-- Training schedules
-- Hardware optimization
-- Evaluation parameters
-
-See individual module READMEs for specific configuration options and usage instructions.
+Each command above is a starting point. Exact flags, config overrides, and troubleshooting notes live in each module's own README.
 
 ---
+
+## 📁 Repository Structure
+
+```
+Dropout-Squad/
+├── DM-SFT/                       # Director Agent supervised baseline (Phi-2 + QLoRA)
+├── PPO/                          # Multi-critic PPO training, the core contribution
+├── causal critic/                 # Causal Responsiveness Critic (RoBERTa, 3-class NLI)
+├── narrative critic/               # Narrative Quality Critic (DeBERTa, regression)
+├── world_consistency critic/       # World Consistency Critic (hybrid neural-symbolic)
+├── character-voice critic/         # Character Voice Critic (NPC embeddings)
+├── hybrid_player/                  # Player simulation: generator + intent classifier
+├── Evaluation/                     # End-to-end evaluation pipeline
+├── Data/                           # Dataset documentation and preprocessing
+├── requirements.txt
+├── LICENSE
+└── Dropout_Squad.pdf               # Full project paper
+```
+
+Every module has its own README with full implementation detail, training configs, and exact commands. The summaries below are intentionally brief; follow the links for the rest.
+
+| Module | Summary | Docs |
+|---|---|:---:|
+| `DM-SFT/` | Phi-2 + QLoRA supervised baseline that seeds the policy before reinforcement learning. | [README](./DM-SFT/README.md) |
+| `PPO/` | The multi-critic PPO training loop, dynamic weighting, and reward aggregation. | [README](./PPO/README.md) |
+| `causal critic/` | RoBERTa-based NLI model scoring causal consistency between player actions and DM responses. | [README](./causal%20critic/README.md) |
+| `narrative critic/` | DeBERTa regression model scoring descriptive quality, atmosphere, and coherence. | [README](./narrative%20critic/README.md) |
+| `world_consistency critic/` | Hybrid neural-symbolic critic that tracks world state and flags contradictions, hallucinations, and amnesia. | [README](./world_consistency%20critic/README.md) |
+| `character-voice critic/` | DeBERTa model with learned per-NPC embeddings for character voice consistency. | [README](./character-voice%20critic/README.md) |
+| `hybrid_player/` | Generates synthetic player prompts and classifies their intent for dynamic weighting. | [README](./hybrid_player/README.md) |
+| `Evaluation/` | End-to-end evaluation pipeline, statistical analysis, and qualitative reporting. | [README](./Evaluation/README.md) |
+| `Data/` | Dataset sourcing, schemas, file-naming conventions, and preprocessing steps. | [README](./Data/README.md) |
+
+---
+
+## 📊 Datasets
+
+| Source | Role | Examples |
+|---|---|:---:|
+| [**CRD3**](https://github.com/RevanthRameshkumar/CRD3) (Critical Role D&D Dataset) | Primary DM training data from 159 episodes of professional, unscripted D&D play | 200,950 DM utterances · 410,797 player utterances |
+| [**LIGHT**](https://github.com/facebookresearch/ParlAI) (Learning in Interactive Games with Humans and Text) | Fantasy dialogue patterns and explicit action labels for intent classification | 108,800 responses across 11,000 episodes |
+| **ROCStories / TinyStories** | General narrative coherence signal for the Narrative Critic | 30,000 + 10,906 D&D responses, 40,906 with synthetic negatives |
+
+**Combined SFT corpus:** 309,750 examples (Train 263,287 / Val 30,975 / Test 15,488). Full preprocessing details, schemas, and storage requirements are in [`Data/README.md`](./Data/README.md).
+
+🔗 [Dataset download](https://1drv.ms/f/c/bdcf3b74ef9b6129/Ep8Im9Kl-SNOspd2NAYqJ4MBzBsoeKe3uRlr6IhZiDkyGg?e=hrZgDd) · 🔗 [Pretrained model checkpoints](https://iiithydresearch-my.sharepoint.com/my?id=%2Fpersonal%2Faman%5Fsrivastava%5Fresearch%5Fiiit%5Fac%5Fin%2FDocuments%2FANLPProjectModels&viewid=645125c6%2Dfd29%2D494e%2D9af6%2Ddc9d91243e02&source=waffle)
+
+---
+
+## 🔬 Detailed Evaluation
+
+<details>
+<summary><b>Intent-stratified performance: does the weighting actually target the right objective</b></summary>
+<br>
+
+**EXPLORE (narrative-heavy weighting)**
+
+| | Combined | Narrative | Causal | World | Character |
+|---|:---:|:---:|:---:|:---:|:---:|
+| SFT | 0.451 | 0.564 | 0.172 | 0.661 | 0.126 |
+| PPO | 0.638 | 0.721 | 0.489 | 0.836 | 0.192 |
+| Δ | +0.187 | **+0.157** | +0.317 | +0.175 | +0.066 |
+
+**ACTION (causal-heavy weighting)**
+
+| | Combined | Narrative | Causal | World | Character |
+|---|:---:|:---:|:---:|:---:|:---:|
+| SFT | 0.378 | 0.489 | 0.198 | 0.581 | 0.134 |
+| PPO | 0.607 | 0.671 | 0.641 | 0.812 | 0.217 |
+| Δ | +0.229 | +0.182 | **+0.443** | +0.231 | +0.083 |
+
+**DIALOGUE (character-heavy weighting)**
+
+| | Combined | Narrative | Causal | World | Character |
+|---|:---:|:---:|:---:|:---:|:---:|
+| SFT | 0.407 | 0.518 | 0.204 | 0.629 | 0.157 |
+| PPO | 0.589 | 0.689 | 0.519 | 0.784 | 0.341 |
+| Δ | +0.182 | +0.171 | +0.315 | +0.155 | **+0.184** |
+
+Each context's single largest gain lands exactly where its weighting vector says it should. That is direct evidence the dynamic weighting does what it claims to do.
+
+</details>
+
+<details>
+<summary><b>PPO training progression (1,000 steps, about 53 minutes on an RTX 4080 Super 16GB)</b></summary>
+<br>
+
+| Step | Mean | Narrative | Causal | World | Character |
+|---:|:---:|:---:|:---:|:---:|:---:|
+| 0 | 0.412 | 0.523 | 0.189 | 0.618 | 0.138 |
+| 250 | 0.507 | 0.601 | 0.374 | 0.721 | 0.189 |
+| 500 | 0.571 | 0.658 | 0.487 | 0.782 | 0.233 |
+| 750 | 0.598 | 0.681 | 0.541 | 0.807 | 0.256 |
+| 1000 | 0.611 | 0.694 | 0.567 | 0.821 | 0.268 |
+
+Training shows three clear phases: strong initial learning from step 0 to 250, sustained improvement from 250 to 750, and convergence from 750 to 1000. No reward hacking or mode collapse was observed across the run.
+
+</details>
+
+<details>
+<summary><b>Narrative critic calibration</b></summary>
+<br>
+
+| Validation Metric | Value |
+|---|:---:|
+| Loss | 0.0158 |
+| MAE | 0.3215 |
+| RMSE | 0.3341 |
+| **Pearson Correlation** | **0.938** |
+| R² | 0.121 |
+
+Strong relative ranking (Pearson 0.94) despite weaker absolute calibration (R² 0.12), a known limitation discussed below that stems from the domain gap between ROCStories pretraining and D&D evaluation. Ranking quality is what matters for RL reward shaping, and that holds up.
+
+</details>
+
+### Visual results
+
+<table>
+<tr>
+<td><img src="DM-SFT/evaluation_results/plots/training_loss_curve.png" width="400"/></td>
+<td><img src="DM-SFT/evaluation_results/plots/quality_metrics.png" width="800"/></td>
+</tr>
+<tr>
+<td align="center">SFT training loss</td>
+<td align="center">Quality metrics across evaluation dimensions</td>
+</tr>
+</table>
+
+---
+
+## 💡 Key Findings
+
+1. **Supervised fine-tuning plateaus regardless of scale.** 310K training examples still produced generic vocabulary, formulaic phrasing, and 57% of outputs below the narrative quality threshold. The ceiling is architectural, not data-limited.
+2. **Decomposed, specialized critics outperform a single monolithic reward signal.** Each critic targets a distinct failure mode: lexical diversity, logical consistency, world state, and dialogue pragmatics. Improving one does not come at the expense of another.
+3. **Context-dependent weighting is a functional requirement, not a tuning detail.** It lets one policy serve fundamentally different quality profiles, atmospheric exploration versus mechanically precise combat, without training separate models, and it outperforms static weighting by 15.7%.
+4. **Hybrid neural-symbolic critics outperform pure neural or pure symbolic approaches for stateful tracking.** The World Consistency Critic pairs an explicit state tracker with a neural extractor and reaches 98.4% accuracy across four distinct violation types.
+5. **The first model is rarely the right one.** The causal critic shipped as a 2-class DeBERTa-v2 model before the team found it did not generalize, then was replaced with the 3-class RoBERTa-base formulation that reaches 88% accuracy in production today.
+
+### Limitations and future work
+
+- **Critic calibration.** The narrative critic ranks well (Pearson 0.94) but absolute score calibration is weaker (R² 0.12). Domain-adaptive calibration is open work.
+- **Intent classification dependency.** Dynamic weighting inherits roughly 87 to 91 percent classifier confidence, and a misclassified intent applies the wrong weight vector. Confidence-weighted interpolation between static and dynamic weights is a natural next step.
+- **Temporal credit assignment.** Critics currently score each turn independently. Trajectory-level critics for long-horizon narrative coherence are future work.
+- **Human evaluation.** All critics are currently self-supervised and automated. A human preference loop would validate, and likely improve, critic targets.
+
+---
+
+## 📄 Citation
+
+If you build on this work, please cite it:
+
+```bibtex
+@techreport{dropoutsquad2025director,
+  title        = {The Director LLM: A Multi-Critic Reinforcement Learning Framework
+                   for Domain-Aware Narrative Generation},
+  author       = {Goyal, Ekansh and Srivastava, Aman and Gupta, Jayant},
+  institution  = {International Institute of Information Technology, Hyderabad},
+  year         = {2025},
+  note         = {\url{https://github.com/Ekansh0301/Dropout-Squad}}
+}
+```
+
+---
+
+## 👥 Team
+
+**Dropout Squad**, International Institute of Information Technology, Hyderabad
+
+| Name | Email |
+|---|---|
+| Ekansh Goyal | ekansh.goyal@research.iiit.ac.in |
+| Aman Srivastava | aman.srivastava@research.iiit.ac.in |
+| Jayant Gupta | jayant.gupta@research.iiit.ac.in |
+
+## 🙏 Acknowledgments
+
+Built on [CRD3](https://github.com/RevanthRameshkumar/CRD3) (Rameshkumar & Bailey, 2020), [LIGHT](https://github.com/facebookresearch/ParlAI) (Urbanek et al., 2019), and [ROCStories](https://cs.rochester.edu/nlp/rocstories/) / TinyStories. Trained with 🤗 Transformers, PEFT, and TRL. Policy optimization via PPO (Schulman et al., 2017). Base model adaptation via QLoRA (Dettmers et al., 2023).
+
+## License
+
+Released under the [MIT License](./LICENSE). See `LICENSE` for the full text.
+
+---
+
+<div align="center">
+<sub>Full methodology, related work, and complete results in <a href="./Dropout_Squad.pdf">Dropout_Squad.pdf</a></sub>
+</div>
